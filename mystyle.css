@@ -1,0 +1,12 @@
+h1 {
+    text-align: center;
+}
+
+.col {
+    border: 1px black solid;
+    padding: 20px;
+}
+
+.card {
+    cursor: move;
+}
