@@ -1,5 +1,5 @@
 const draggables = document.querySelectorAll('.draggable')
-const containers = document.querySelectorAll('.container')
+const columns = document.querySelectorAll('.col')
 
 draggables.forEach(draggable => {
     draggable.addEventListener('dragstart', () => {
@@ -13,35 +13,17 @@ draggables.forEach(draggable => {
 
 
 
-
 // … 
-containers.forEach(container => {
-    container.addEventListener('dragover', e => {
-        e.preventDefault()
-        const afterElement = getDragAfterElement(container, e.clientY)
+columns.forEach(column => {
+    column.addEventListener('dragover', e => {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(column, e.clientY)
         const draggable = document.querySelector('.dragging')
         if (afterElement == null) {
-            container.appendChild(draggable)
+            column.appendChild(draggable)
         }
         else {
-            container.insertBefore(draggable, afterElement)
-        }
-    })
-})
-
-
-// … 
-containers.forEach(container => {
-    container.addEventListener('dragover', e => {
-        // e.preventDefault()
-        pauseEvent(e);
-        const afterElement = getDragAfterElement(container, e.clientY)
-        const draggable = document.querySelector('.dragging')
-        if (afterElement == null) {
-            container.appendChild(draggable)
-        }
-        else {
-            container.insertBefore(draggable, afterElement)
+            column.insertBefore(draggable, afterElement)
         }
     })
 })
@@ -49,8 +31,8 @@ containers.forEach(container => {
 
 
 // …
-function getDragAfterElement(container, y) {
-    const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')]
+function getDragAfterElement(column, y) {
+    const draggableElements = [...column.querySelectorAll('.draggable:not(.dragging)')]
 
     // …
     return draggableElements.reduce((closest, child) => {
@@ -67,11 +49,4 @@ function getDragAfterElement(container, y) {
 
 
 
-function pauseEvent(e) {
-    if (e.stopPropagation) e.stopPropagation();
-    if (e.preventDefault) e.preventDefault();
-    e.cancelBubble = true;
-    e.returnValue = false;
-    return false;
-}
 
