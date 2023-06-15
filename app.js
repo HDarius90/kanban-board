@@ -1,6 +1,7 @@
 const draggables = document.querySelectorAll('.draggable')
 const containers = document.querySelectorAll('.container')
 
+
 draggables.forEach(draggable => {
     draggable.addEventListener('dragstart', () => {
         draggable.classList.add('dragging')
@@ -10,42 +11,6 @@ draggables.forEach(draggable => {
         draggable.classList.remove('dragging')
     })
 })
-
-
-
-
-// … 
-containers.forEach(container => {
-    container.addEventListener('dragover', e => {
-        e.preventDefault()
-        const afterElement = getDragAfterElement(container, e.clientY)
-        const draggable = document.querySelector('.dragging')
-        if (afterElement == null) {
-            container.appendChild(draggable)
-        }
-        else {
-            container.insertBefore(draggable, afterElement)
-        }
-    })
-})
-
-
-// … 
-containers.forEach(container => {
-    container.addEventListener('dragover', e => {
-        // e.preventDefault()
-        pauseEvent(e);
-        const afterElement = getDragAfterElement(container, e.clientY)
-        const draggable = document.querySelector('.dragging')
-        if (afterElement == null) {
-            container.appendChild(draggable)
-        }
-        else {
-            container.insertBefore(draggable, afterElement)
-        }
-    })
-})
-
 
 
 // …
@@ -65,13 +30,21 @@ function getDragAfterElement(container, y) {
     }, { offset: Number.NEGATIVE_INFINITY }).element
 }
 
+// … 
+containers.forEach(container => {
+    container.addEventListener('dragover', e => {
+        e.preventDefault()
+        const afterElement = getDragAfterElement(container, e.clientY)
+        const draggable = document.querySelector('.dragging')
+        if (afterElement == null) {
+            container.appendChild(draggable)
+        }
+        else {
+            container.insertBefore(draggable, afterElement)
+        }
+    })
+})
 
 
-function pauseEvent(e) {
-    if (e.stopPropagation) e.stopPropagation();
-    if (e.preventDefault) e.preventDefault();
-    e.cancelBubble = true;
-    e.returnValue = false;
-    return false;
-}
+
 

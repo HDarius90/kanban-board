@@ -10,3 +10,8 @@ h1 {
 .card {
     cursor: move;
 }
+
+body {
+    /* Prevent the user selecting text*/
+    user-select: none;
+  }
