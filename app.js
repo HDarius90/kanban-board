@@ -10,6 +10,13 @@ draggables.forEach(draggable => {
     draggable.addEventListener('dragend', () => {
         draggable.classList.remove('dragging')
     })
+
+    draggable.addEventListener('click', () => {
+        let prevFocus = document.querySelector('.focus')
+        draggable.classList.toggle('focus')
+        if (prevFocus !== draggable) prevFocus.classList.remove('focus');
+        console.log(prevFocus);
+    })
 })
 
 
@@ -48,20 +55,23 @@ function getDragAfterElement(column, y) {
     }, { offset: Number.NEGATIVE_INFINITY }).element
 }
 
+
 // … 
-containers.forEach(container => {
-    container.addEventListener('dragover', e => {
+columns.forEach(column => {
+    column.addEventListener('dragover', e => {
         e.preventDefault()
-        const afterElement = getDragAfterElement(container, e.clientY)
+        const afterElement = getDragAfterElement(column, e.clientY)
         const draggable = document.querySelector('.dragging')
         if (afterElement == null) {
-            container.appendChild(draggable)
+            column.appendChild(draggable)
         }
         else {
-            container.insertBefore(draggable, afterElement)
+            column.insertBefore(draggable, afterElement)
         }
     })
 })
+
+
 
 
 
