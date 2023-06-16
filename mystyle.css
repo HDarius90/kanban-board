@@ -14,3 +14,11 @@ h1 {
 .focus {
     background-color: aqua;
 }
+
+.btn-group {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 25rem;
+    border: 2px solid black;
+}
