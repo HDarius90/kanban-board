@@ -1,5 +1,8 @@
 const draggables = document.querySelectorAll('.draggable')
 const columns = document.querySelectorAll('.col')
+const btnLeft = document.querySelector('.btn-left')
+const btnRight = document.querySelector('.btn-right')
+const btnDelete = document.querySelector('.btn-delete')
 
 
 draggables.forEach(draggable => {
@@ -71,6 +74,44 @@ columns.forEach(column => {
     })
 })
 
+function getCurrentColIndex(selectedCard) {
+    for (let i = 0; i < 3; i++) {
+        if (selectedCard.parentElement === selectedCard.parentElement.parentElement.children[i]) {
+            return i;
+        }
+    }
+}
+
+
+
+btnLeft.addEventListener('click', () => {
+    let selectedCard = document.querySelector('.focus')
+    switch (getCurrentColIndex(selectedCard)) {
+        case 1:
+            columns[0].appendChild(selectedCard)
+            break;
+        case 2:
+            columns[1].appendChild(selectedCard)
+            break;
+    }
+})
+
+btnRight.addEventListener('click', () => {
+    let selectedCard = document.querySelector('.focus')
+    switch (getCurrentColIndex(selectedCard)) {
+        case 0:
+            columns[1].appendChild(selectedCard)
+            break;
+        case 1:
+            columns[2].appendChild(selectedCard)
+            break;
+    }
+})
+
+btnDelete.addEventListener('click', () => {
+    let selectedCard = document.querySelector('.focus')
+    selectedCard.remove();
+})
 
 
 
