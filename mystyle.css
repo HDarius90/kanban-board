@@ -22,3 +22,8 @@ h1 {
     width: 25rem;
     border: 2px solid black;
 }
+
+.col {
+    height: 40rem;
+    margin: 1rem;
+}
