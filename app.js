@@ -3,17 +3,19 @@ const columns = document.querySelectorAll('.col')
 const btnLeft = document.querySelector('.btn-left')
 const btnRight = document.querySelector('.btn-right')
 const btnDelete = document.querySelector('.btn-delete')
+const btnNew = document.querySelector('.btn-new')
+const btnOpenForm = document.querySelector('.open-button')
+const btnCancelForm = document.querySelector('button.cancel')
+const btnAddForm = document.querySelector('button.add')
 
 
 draggables.forEach(draggable => {
     draggable.addEventListener('dragstart', () => {
         draggable.classList.add('dragging')
     })
-
     draggable.addEventListener('dragend', () => {
         draggable.classList.remove('dragging')
     })
-
     draggable.addEventListener('click', () => {
         let prevFocus = document.querySelector('.focus')
         draggable.classList.toggle('focus')
@@ -21,8 +23,6 @@ draggables.forEach(draggable => {
         console.log(prevFocus);
     })
 })
-
-
 
 // … 
 columns.forEach(column => {
@@ -38,8 +38,6 @@ columns.forEach(column => {
         }
     })
 })
-
-
 
 // …
 function getDragAfterElement(column, y) {
@@ -82,8 +80,6 @@ function getCurrentColIndex(selectedCard) {
     }
 }
 
-
-
 btnLeft.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
     switch (getCurrentColIndex(selectedCard)) {
@@ -113,6 +109,30 @@ btnDelete.addEventListener('click', () => {
     selectedCard.remove();
 })
 
+function validateForm() {
+    let taskText = document.forms["newTaskForm"]["taskText"].value;
+    if (taskText == "") {
+      alert("Text must be filled out");
+      return false;
+    }
+        return true;
+  }
+
+btnOpenForm.addEventListener('click', () => {
+    document.getElementById("myForm").style.display = "block";
+})
+
+btnCancelForm.addEventListener('click', () => {
+    document.getElementById("myForm").style.display = "none";
+
+})
+
+btnAddForm.addEventListener('click', (e) => {
+    e.preventDefault();
+    if(validateForm()) {
+
+    }
+})
 
 
 
