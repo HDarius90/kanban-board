@@ -1,22 +1,42 @@
 body
-{box-sizing: border-box;}
+{
+    box-sizing: border-box;
+    padding: 1rem;
+    background-color: #457b9d;
+}
 
 h1 {
     text-align: center;
+    color: white;
+    font-weight: 700;
+    font-size: 4rem;
+}
+
+.col-title-red {
+    background-color: #ec8796;
+}
+.col-title-yellow {
+    background-color: #f2e682;
+}
+.col-title-green {
+    background-color: #95f489;
 }
 
 .col {
     border: 1px black solid;
-    padding: 20px;
+    padding: 0%;
 }
 
 .card {
     cursor: move;
-    margin: 1rem;
+    margin: 2rem;
+    transition-duration: 0.4s;
 }
 
 .focus {
     background-color: aqua;
+    font-weight: bold;
+    transform: scale(1.11);
 }
 
 .btn-group {
@@ -31,6 +51,8 @@ h1 {
     height: 40rem;
     margin: 1rem;
 }
+
+
 
 
 
