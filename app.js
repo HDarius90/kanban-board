@@ -8,6 +8,13 @@ const btnOpenForm = document.querySelector('.open-button')
 const btnCancelForm = document.querySelector('button.cancel')
 const btnAddForm = document.querySelector('button.add')
 
+class Task {
+    constructor(text, state) {
+        this.text = text;
+        this.state = state;
+    }
+}
+
 
 draggables.forEach(draggable => {
     draggable.addEventListener('dragstart', () => {
@@ -112,11 +119,11 @@ btnDelete.addEventListener('click', () => {
 function validateForm() {
     let taskText = document.forms["newTaskForm"]["taskText"].value;
     if (taskText == "") {
-      alert("Text must be filled out");
-      return false;
+        alert("Text must be filled out");
+        return false;
     }
-        return true;
-  }
+    return true;
+}
 
 btnOpenForm.addEventListener('click', () => {
     document.getElementById("myForm").style.display = "block";
@@ -127,11 +134,46 @@ btnCancelForm.addEventListener('click', () => {
 
 })
 
+function addCard(Task, element) {
+    element.
+        appendChild(
+            Object.assign(
+                document.createElement('div'),
+                { className: 'card draggable' }
+            )
+        ).appendChild(
+            Object.assign(
+                document.createElement('div'),
+                { className: 'card-body' }
+            )
+        ).appendChild(
+            Object.assign(
+                document.createElement('span'),
+                { innerText: Task.text }
+            )
+        )
+}
+
 btnAddForm.addEventListener('click', (e) => {
     e.preventDefault();
-    if(validateForm()) {
-
+    if (validateForm()) {
+        let taskText = document.forms["newTaskForm"]["taskText"].value;
+        let taskState = document.forms["newTaskForm"]["state"].value;
+        let newTask = new Task(taskText, taskState);
+        console.log(newTask);
+        switch (newTask.state) {
+            case 'todo':
+                addCard(newTask, columns[0]);
+                break;
+            case 'inprogress':
+                addCard(newTask, columns[1]);
+                break;
+            case 'done':
+                addCard(newTask, columns[2]);
+                break;
+        }
     }
+
 })
 
 
