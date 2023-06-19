@@ -15,20 +15,26 @@ class Task {
     }
 }
 
+function addEventListeners(element) {
+    element.addEventListener('dragstart', () => {
+        element.classList.add('dragging');
+    })
 
-draggables.forEach(draggable => {
-    draggable.addEventListener('dragstart', () => {
-        draggable.classList.add('dragging')
+    element.addEventListener('dragend', () => {
+        element.classList.remove('dragging')
     })
-    draggable.addEventListener('dragend', () => {
-        draggable.classList.remove('dragging')
-    })
-    draggable.addEventListener('click', () => {
+
+    element.addEventListener('click', () => {
         let prevFocus = document.querySelector('.focus')
-        draggable.classList.toggle('focus')
-        if (prevFocus !== draggable) prevFocus.classList.remove('focus');
+        element.classList.toggle('focus')
+        if (prevFocus !== element) prevFocus.classList.remove('focus');
         console.log(prevFocus);
     })
+}
+
+
+draggables.forEach(draggable => {
+    addEventListeners(draggable)
 })
 
 // … 
@@ -152,22 +158,11 @@ function addCard(Task, element) {
                 { innerText: Task.text }
             )
         )
-    console.log(element.lastChild)
-    element.lastChild.addEventListener('dragstart', () => {
-        element.lastChild.classList.add('dragging');
-    })
 
-    element.lastChild.addEventListener('dragend', () => {
-        element.lastChild.classList.remove('dragging')
-    })
-
-    element.lastChild.addEventListener('click', () => {
-        let prevFocus = document.querySelector('.focus')
-        element.lastChild.classList.toggle('focus')
-        if (prevFocus !== element.lastChild) prevFocus.classList.remove('focus');
-        console.log(prevFocus);
-    })
+    addEventListeners(element.lastChild);
 }
+
+
 
 btnAddForm.addEventListener('click', (e) => {
     e.preventDefault();
