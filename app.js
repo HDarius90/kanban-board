@@ -152,6 +152,21 @@ function addCard(Task, element) {
                 { innerText: Task.text }
             )
         )
+    console.log(element.lastChild)
+    element.lastChild.addEventListener('dragstart', () => {
+        element.lastChild.classList.add('dragging');
+    })
+
+    element.lastChild.addEventListener('dragend', () => {
+        element.lastChild.classList.remove('dragging')
+    })
+
+    element.lastChild.addEventListener('click', () => {
+        let prevFocus = document.querySelector('.focus')
+        element.lastChild.classList.toggle('focus')
+        if (prevFocus !== element.lastChild) prevFocus.classList.remove('focus');
+        console.log(prevFocus);
+    })
 }
 
 btnAddForm.addEventListener('click', (e) => {
@@ -172,10 +187,7 @@ btnAddForm.addEventListener('click', (e) => {
                 addCard(newTask, columns[2]);
                 break;
         }
+        document.getElementById("myForm").style.display = "none";
     }
-
 })
-
-
-
 
