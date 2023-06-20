@@ -38,6 +38,7 @@ h1 {
   background-color: aqua;
   font-weight: bold;
   transform: scale(1.11);
+  border: 2px black solid;
 }
 
 .btn-group {
@@ -46,6 +47,26 @@ h1 {
   left: 2rem;
   width: 25rem;
   border: 2px solid black;
+}
+
+@media screen and (max-width: 740px) {
+  .btn-group {
+    position: fixed;
+    bottom: 6rem;
+    left: 2rem;
+    width: 25rem;
+    border: 2px solid black;
+  }
+}
+
+@media screen and (max-width: 445px) {
+  .btn-group {
+    position: fixed;
+    bottom: 6rem;
+    left: 2rem;
+    width: 18rem;
+    border: 2px solid black;
+  }
 }
 
 .col {
