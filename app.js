@@ -41,20 +41,6 @@ draggables.forEach(draggable => {
     addEventListeners(draggable)
 })
 
-// … 
-columns.forEach(column => {
-    column.addEventListener('dragover', e => {
-        e.preventDefault();
-        const afterElement = getDragAfterElement(column, e.clientY)
-        const draggable = document.querySelector('.dragging')
-        if (afterElement == null) {
-            column.appendChild(draggable)
-        }
-        else {
-            column.insertBefore(draggable, afterElement)
-        }
-    })
-})
 
 // …
 function getDragAfterElement(column, y) {
@@ -175,7 +161,9 @@ btnAddForm.addEventListener('click', (e) => {
     e.preventDefault();
     if (validateForm()) {
         let taskText = document.forms["newTaskForm"]["taskText"].value;
+        document.forms["newTaskForm"]["taskText"].value = '';
         let taskState = document.forms["newTaskForm"]["state"].value;
+        document.forms["newTaskForm"]["state"].value = 'todo'
         let newTask = new Task(taskText, taskState);
         console.log(newTask);
         switch (newTask.state) {
