@@ -145,25 +145,28 @@ btnCancelForm.addEventListener('click', () => {
 })
 
 function addCard(Task, element) {
-    element.
-        appendChild(
-            Object.assign(
-                document.createElement('div'),
-                { className: 'card', draggable: true }
+    if (element.children.length < 7) {
+        element.
+            appendChild(
+                Object.assign(
+                    document.createElement('div'),
+                    { className: 'card', draggable: true }
+                )
+            ).appendChild(
+                Object.assign(
+                    document.createElement('div'),
+                    { className: 'card-body' }
+                )
+            ).appendChild(
+                Object.assign(
+                    document.createElement('span'),
+                    { innerText: Task.text }
+                )
             )
-        ).appendChild(
-            Object.assign(
-                document.createElement('div'),
-                { className: 'card-body' }
-            )
-        ).appendChild(
-            Object.assign(
-                document.createElement('span'),
-                { innerText: Task.text }
-            )
-        )
 
-    addEventListeners(element.lastChild);
+        addEventListeners(element.lastChild);
+    }
+
 }
 
 
