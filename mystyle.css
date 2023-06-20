@@ -1,55 +1,56 @@
-body
-{
-    box-sizing: border-box;
-    padding: 1rem;
-    background-color: #457b9d;
+body {
+  box-sizing: border-box;
+  padding: 1rem;
+  background-color: #457b9d;
 }
 
 h1 {
-    text-align: center;
-    color: white;
-    font-weight: 700;
-    font-size: 4rem;
+  text-align: center;
+  color: white;
+  font-weight: 700;
+  font-size: 4rem;
 }
 
 .col-title-red {
-    background-color: #ec8796;
+  background-color: #ec8796;
 }
+
 .col-title-yellow {
-    background-color: #f2e682;
+  background-color: #f2e682;
 }
+
 .col-title-green {
-    background-color: #95f489;
+  background-color: #95f489;
 }
 
 .col {
-    border: 1px black solid;
-    padding: 0%;
+  border: 3px black solid;
+  padding: 0%;
 }
 
 .card {
-    cursor: move;
-    margin: 2rem;
-    transition-duration: 0.4s;
+  cursor: move;
+  margin: 2rem;
+  transition-duration: 0.4s;
 }
 
 .focus {
-    background-color: aqua;
-    font-weight: bold;
-    transform: scale(1.11);
+  background-color: aqua;
+  font-weight: bold;
+  transform: scale(1.11);
 }
 
 .btn-group {
-    position: fixed;
-    bottom: 2rem;
-    left: 2rem;
-    width: 25rem;
-    border: 2px solid black;
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  width: 25rem;
+  border: 2px solid black;
 }
 
 .col {
-    height: 40rem;
-    margin: 1rem;
+  height: 40rem;
+  margin: 1rem;
 }
 
 
@@ -88,7 +89,8 @@ h1 {
 }
 
 /* Full-width input fields */
-.form-container input[type=text], .form-container input[type=password] {
+.form-container input[type=text],
+.form-container input[type=password] {
   width: 100%;
   padding: 15px;
   margin: 5px 0 22px 0;
@@ -97,7 +99,8 @@ h1 {
 }
 
 /* When the inputs get focus, do something */
-.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+.form-container input[type=text]:focus,
+.form-container input[type=password]:focus {
   background-color: #ddd;
   outline: none;
 }
@@ -110,7 +113,7 @@ h1 {
   border: none;
   cursor: pointer;
   width: 100%;
-  margin-bottom:10px;
+  margin-bottom: 10px;
   opacity: 0.8;
 }
 
@@ -120,6 +123,7 @@ h1 {
 }
 
 /* Add some hover effects to buttons */
-.form-container .btn:hover, .open-button:hover {
+.form-container .btn:hover,
+.open-button:hover {
   opacity: 1;
 }

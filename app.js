@@ -1,4 +1,4 @@
-const draggables = document.querySelectorAll('.draggable')
+const draggables = document.querySelectorAll('[draggable=true]')
 const columns = document.querySelectorAll('.col')
 const btnLeft = document.querySelector('.btn-left')
 const btnRight = document.querySelector('.btn-right')
@@ -54,7 +54,7 @@ columns.forEach(column => {
 
 // …
 function getDragAfterElement(column, y) {
-    const draggableElements = [...column.querySelectorAll('.draggable:not(.dragging)')]
+    const draggableElements = [...column.querySelectorAll('[draggable=true]:not(.dragging)')]
 
     // …
     return draggableElements.reduce((closest, child) => {
@@ -145,7 +145,7 @@ function addCard(Task, element) {
         appendChild(
             Object.assign(
                 document.createElement('div'),
-                { className: 'card draggable' }
+                { className: 'card', draggable: true }
             )
         ).appendChild(
             Object.assign(
