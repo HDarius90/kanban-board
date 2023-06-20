@@ -28,7 +28,11 @@ function addEventListeners(element) {
         let prevFocus = document.querySelector('.focus')
         element.classList.toggle('focus')
         if (prevFocus !== element) prevFocus.classList.remove('focus');
-        console.log(prevFocus);
+    })
+
+    element.addEventListener('dblclick', () => {
+        let newTaskText = prompt('Rename task:');
+        if (newTaskText) element.firstElementChild.firstElementChild.textContent = newTaskText;
     })
 }
 
