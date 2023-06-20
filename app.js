@@ -130,7 +130,7 @@ btnCancelForm.addEventListener('click', () => {
 
 })
 
-function addCard(Task, element) {
+function addCard(task, element) {
     if (element.children.length < 7) {
         element.
             appendChild(
@@ -146,7 +146,7 @@ function addCard(Task, element) {
             ).appendChild(
                 Object.assign(
                     document.createElement('span'),
-                    { innerText: Task.text }
+                    { innerText: task.text }
                 )
             )
 

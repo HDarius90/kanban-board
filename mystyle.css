@@ -13,14 +13,17 @@ h1 {
 
 .col-title-red {
   background-color: #ec8796;
+  padding: 1em;
 }
 
 .col-title-yellow {
   background-color: #f2e682;
+  padding: 1em;
 }
 
 .col-title-green {
   background-color: #95f489;
+  padding: 1em;
 }
 
 .col {
