@@ -10,14 +10,28 @@ const btnAddForm = document.querySelector('button.add')
 import { addEventListeners } from "./events.js"
 
 class Task {
-    constructor(text, state) {
+    constructor(text, state, id) {
         this.text = text;
         this.state = state;
+        this.id = id;
     }
 }
 
+let taskIDCount = 3;
 
-//Apply the event listeners to all draggable elements
+//curentTask holdes all the task objects
+let currentTasks = [];
+let testTask1 = new Task("This is just text within a card body", "todo", "task-#1");
+let testTask2 = new Task("This is some text within a card body", "inprogress", "task-#2");
+let testTask3 = new Task("This is some more text within a card body", "done", "task-#3");
+currentTasks.push(testTask1, testTask2, testTask3);
+
+//append testTasks to the DOM
+currentTasks.forEach(task => {
+    appendTaskToDom(task)
+})
+
+//Apply all the event listeners to all draggable elements
 draggables.forEach(draggable => {
     addEventListeners(draggable)
 })
@@ -56,6 +70,7 @@ columns.forEach(column => {
     })
 })
 
+//ezt ki kell kukázni!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 function getCurrentColIndex(selectedCard) {
     for (let i = 0; i < 3; i++) {
         if (selectedCard.parentElement === selectedCard.parentElement.parentElement.children[i]) {
@@ -64,6 +79,7 @@ function getCurrentColIndex(selectedCard) {
     }
 }
 
+//ezt ki kell kukázni!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 btnLeft.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
     switch (getCurrentColIndex(selectedCard)) {
@@ -93,6 +109,7 @@ btnDelete.addEventListener('click', () => {
     selectedCard.remove();
 })
 
+//Check if user filled out text input field and return boolean
 function validateForm() {
     let taskText = document.forms["newTaskForm"]["taskText"].value;
     if (taskText == "") {
@@ -102,22 +119,25 @@ function validateForm() {
     return true;
 }
 
+//Show form
 btnOpenForm.addEventListener('click', () => {
     document.getElementById("myForm").style.display = "block";
 })
 
+//Hide Form
 btnCancelForm.addEventListener('click', () => {
     document.getElementById("myForm").style.display = "none";
 
 })
 
+//makes a Card element from task object and append it to an element if the element has less then 7 children, and add eventlisteners
 function addCard(task, element) {
     if (element.children.length < 7) {
         element.
             appendChild(
                 Object.assign(
                     document.createElement('div'),
-                    { className: 'card', draggable: true }
+                    { className: 'card', draggable: true, id: task.id }
                 )
             ).appendChild(
                 Object.assign(
@@ -136,27 +156,35 @@ function addCard(task, element) {
 
 }
 
+function appendTaskToDom (task) {
+    switch (task.state) {
+        case 'todo':
+            addCard(task, columns[0]);
+            break;
+        case 'inprogress':
+            addCard(task, columns[1]);
+            break;
+        case 'done':
+            addCard(task, columns[2]);
+            break;
+    }
+}
+
+//if form valid then creates new Task object from input fields value, push it on the vurrentTasks array, and append it to the DOM then hide the form
 btnAddForm.addEventListener('click', (e) => {
     e.preventDefault();
     if (validateForm()) {
         let taskText = document.forms["newTaskForm"]["taskText"].value;
         document.forms["newTaskForm"]["taskText"].value = '';
         let taskState = document.forms["newTaskForm"]["state"].value;
-        document.forms["newTaskForm"]["state"].value = 'todo'
-        let newTask = new Task(taskText, taskState);
-        console.log(newTask);
-        switch (newTask.state) {
-            case 'todo':
-                addCard(newTask, columns[0]);
-                break;
-            case 'inprogress':
-                addCard(newTask, columns[1]);
-                break;
-            case 'done':
-                addCard(newTask, columns[2]);
-                break;
-        }
+        document.forms["newTaskForm"]["state"].value = 'todo';
+        taskIDCount++;
+        let newTaskID = 'task-#' + taskIDCount;
+        let newTask = new Task(taskText, taskState, newTaskID);
+        currentTasks.push(newTask);
+        appendTaskToDom(newTask);
         document.getElementById("myForm").style.display = "none";
     }
 })
+
 
