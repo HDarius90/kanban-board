@@ -20,11 +20,12 @@ class Task {
 let taskIDCount = 3;
 
 //curentTask holdes all the task objects
-let currentTasks = [];
+const currentTasks = [];
 let testTask1 = new Task("This is just text within a card body", "todo", "task-#1");
 let testTask2 = new Task("This is some text within a card body", "inprogress", "task-#2");
 let testTask3 = new Task("This is some more text within a card body", "done", "task-#3");
 currentTasks.push(testTask1, testTask2, testTask3);
+
 
 //append testTasks to the DOM
 currentTasks.forEach(task => {
@@ -107,6 +108,7 @@ btnRight.addEventListener('click', () => {
 btnDelete.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
     selectedCard.remove();
+
 })
 
 //Check if user filled out text input field and return boolean

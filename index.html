@@ -25,19 +25,19 @@
                 <div class="col-title-red">
                     <h4>To Do</h4>
                 </div>
-                
+
             </div>
             <div class="col container">
                 <div class="col-title-yellow">
                     <h4>In Progress</h4>
                 </div>
-               
+
             </div>
             <div class="col container">
                 <div class="col-title-green">
                     <h4>Done</h4>
                 </div>
-               
+
             </div>
         </div>
     </div>
@@ -75,15 +75,14 @@
         <form action="/action_page.php" class="form-container" name="newTaskForm">
             <h2>New Task</h2>
 
-            <label for="text"><b>Text</b></label>
-            <input type="text" placeholder="Enter New Task" name="taskText" required>
+            <label for="task-text"><b>Text</b></label>
+            <input type="text" id="task-text" placeholder="Enter New Task" name="taskText" required>
 
-            <input type="radio" id="todo" name="state" value="todo" checked>
-            <label for="todo">To Do</label><br>
-            <input type="radio" id="inprogress" name="state" value="inprogress">
-            <label for="inprogress">In Progress</label><br>
-            <input type="radio" id="done" name="state" value="done">
-            <label for="done">Done</label>
+
+            <label for="todo"><input type="radio" id="todo" name="state" value="todo" checked> To Do</label><br>
+            <label for="inprogress"><input type="radio" id="inprogress" name="state" value="inprogress"> In
+                Progress</label><br>
+            <label for="done"><input type="radio" id="done" name="state" value="done"> Done</label>
 
             <button type="submit" class="btn add">Add</button>
             <button type="button" class="btn cancel">Close</button>
