@@ -22,11 +22,10 @@ class Task {
 
 let taskIDCount = 3;
 
-//curentTask holdes all the task objects
+//curentTask holdes all the task objects. If it is exist then load it from local storage instead of creating testTasks.
 let currentTasks = [];
 if (localStorage.getItem('currentTasks')){
     currentTasks = JSON.parse(localStorage.getItem('currentTasks'));
-    console.log(currentTasks);
 } else {
     let testTask1 = new Task("This is just text within a card body", "todo", "task-#1");
     let testTask2 = new Task("This is some text within a card body", "inprogress", "task-#2");
