@@ -3,11 +3,14 @@ const columns = document.querySelectorAll('.col')
 const btnLeft = document.querySelector('.btn-left')
 const btnRight = document.querySelector('.btn-right')
 const btnDelete = document.querySelector('.btn-delete')
+const btnSave = document.querySelector('.btn-save')
 const btnOpenForm = document.querySelector('.open-button')
 const btnCancelForm = document.querySelector('button.cancel')
 const btnAddForm = document.querySelector('button.add')
 
+
 import { addEventListeners } from "./events.js"
+
 
 class Task {
     constructor(text, state, id) {
@@ -20,11 +23,16 @@ class Task {
 let taskIDCount = 3;
 
 //curentTask holdes all the task objects
-const currentTasks = [];
-let testTask1 = new Task("This is just text within a card body", "todo", "task-#1");
-let testTask2 = new Task("This is some text within a card body", "inprogress", "task-#2");
-let testTask3 = new Task("This is some more text within a card body", "done", "task-#3");
-currentTasks.push(testTask1, testTask2, testTask3);
+let currentTasks = [];
+if (localStorage.getItem('currentTasks')){
+    currentTasks = JSON.parse(localStorage.getItem('currentTasks'));
+    console.log(currentTasks);
+} else {
+    let testTask1 = new Task("This is just text within a card body", "todo", "task-#1");
+    let testTask2 = new Task("This is some text within a card body", "inprogress", "task-#2");
+    let testTask3 = new Task("This is some more text within a card body", "done", "task-#3");
+    currentTasks.push(testTask1, testTask2, testTask3);
+}
 
 
 //append testTasks to the DOM
@@ -71,44 +79,51 @@ columns.forEach(column => {
     })
 })
 
-//ezt ki kell kukázni!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-function getCurrentColIndex(selectedCard) {
-    for (let i = 0; i < 3; i++) {
-        if (selectedCard.parentElement === selectedCard.parentElement.parentElement.children[i]) {
-            return i;
-        }
-    }
-}
 
-//ezt ki kell kukázni!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+//Mooving cards in the columns to the left and updating the task.state in currentTasks variable
 btnLeft.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
-    switch (getCurrentColIndex(selectedCard)) {
-        case 1:
+    let focusedTask = currentTasks.find(task => task.id === selectedCard.id);
+    switch (focusedTask.state) {
+        case 'inprogress':
             columns[0].appendChild(selectedCard)
+            focusedTask.state = 'todo';
             break;
-        case 2:
+        case 'done':
             columns[1].appendChild(selectedCard)
+            focusedTask.state = 'inprogress';
             break;
     }
 })
 
+//Mooving cards in the columns to the right and updating the task.state in currentTasks variable
 btnRight.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
-    switch (getCurrentColIndex(selectedCard)) {
-        case 0:
+    let focusedTask = currentTasks.find(task => task.id === selectedCard.id);
+    switch (focusedTask.state) {
+        case 'todo':
             columns[1].appendChild(selectedCard)
+            focusedTask.state = 'inprogress';
             break;
-        case 1:
+        case 'inprogress':
             columns[2].appendChild(selectedCard)
+            focusedTask.state = 'done';
             break;
     }
 })
 
+//removing selected card from DOM and from currentTasks variable
 btnDelete.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
+    currentTasks = currentTasks.filter(task => task.id !== selectedCard.id);
     selectedCard.remove();
+    console.log(currentTasks);
+})
 
+//Saving currentTasks to file
+btnSave.addEventListener('click', () => {
+    localStorage.setItem('currentTasks', JSON.stringify(currentTasks));
 })
 
 //Check if user filled out text input field and return boolean
@@ -158,7 +173,7 @@ function addCard(task, element) {
 
 }
 
-function appendTaskToDom (task) {
+function appendTaskToDom(task) {
     switch (task.state) {
         case 'todo':
             addCard(task, columns[0]);
