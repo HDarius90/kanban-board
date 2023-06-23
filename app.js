@@ -24,7 +24,7 @@ let taskIDCount = 3;
 
 //curentTask holdes all the task objects. If it is exist then load it from local storage instead of creating testTasks.
 let currentTasks = [];
-if (localStorage.getItem('currentTasks')){
+if (localStorage.getItem('currentTasks')) {
     currentTasks = JSON.parse(localStorage.getItem('currentTasks'));
 } else {
     let testTask1 = new Task("This is just text within a card body", "todo", "task-#1");
@@ -123,6 +123,10 @@ btnDelete.addEventListener('click', () => {
 //Saving currentTasks to file
 btnSave.addEventListener('click', () => {
     localStorage.setItem('currentTasks', JSON.stringify(currentTasks));
+    document.getElementById("alert").classList.add('d-flex');
+    setTimeout(() => {
+        document.getElementById("alert").classList.remove('d-flex');
+    }, 3000)
 })
 
 //Check if user filled out text input field and return boolean
