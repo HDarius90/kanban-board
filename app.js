@@ -120,7 +120,7 @@ btnDelete.addEventListener('click', () => {
     console.log(currentTasks);
 })
 
-//Saving currentTasks to file
+//Saving currentTasks to localStorage and showing success alert then hide it
 btnSave.addEventListener('click', () => {
     localStorage.setItem('currentTasks', JSON.stringify(currentTasks));
     document.getElementById("alert").classList.add('d-flex');
