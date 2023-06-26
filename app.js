@@ -13,7 +13,15 @@ import { addEventListeners } from "./events.js"
 import { openProject } from "./tabs.js"
 
 
+//adding eventlisteners for the tab buttons, to open project tabs
+tabButtons.forEach((tabButton) => {
+    tabButton.addEventListener('click', (event) => {
+        openProject(event, tabButton.value)
+    })
+})
 
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
 
 
 class Task {
@@ -28,19 +36,20 @@ class Task {
 
 let taskIDCount = 3;
 
-//curentTask holdes all the task objects. If it is exist then load it from local storage instead of creating testTasks.
-let currentTasks = [];
-if (localStorage.getItem('currentTasks')) {
-    currentTasks = JSON.parse(localStorage.getItem('currentTasks'));
+
+//projectTasks holdes all the task objects. If it is exist then load it from local storage instead of creating testTasks.
+let project1Tasks = [];
+if (localStorage.getItem('project1Tasks')) {
+    project1Tasks = JSON.parse(localStorage.getItem('project1Tasks'));
 } else {
     let testTask1 = new Task("This is just text within a card body", "todo", "task-#1");
     let testTask2 = new Task("This is some text within a card body", "inprogress", "task-#2");
     let testTask3 = new Task("This is some more text within a card body", "done", "task-#3");
-    currentTasks.push(testTask1, testTask2, testTask3);
+    project1Tasks.push(testTask1, testTask2, testTask3);
 }
 
 //append testTasks to the DOM
-currentTasks.forEach(task => {
+project1Tasks.forEach(task => {
     appendTaskToDom(task)
 })
 
@@ -82,10 +91,10 @@ columns.forEach(column => {
     })
 })
 
-//Mooving cards in the columns to the left and updating the task.state in currentTasks variable
+//Mooving cards in the columns to the left and updating the task.state in project1Tasks variable
 btnLeft.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
-    let focusedTask = currentTasks.find(task => task.id === selectedCard.id);
+    let focusedTask = project1Tasks.find(task => task.id === selectedCard.id);
     switch (focusedTask.state) {
         case 'inprogress':
             columns[0].appendChild(selectedCard)
@@ -98,10 +107,10 @@ btnLeft.addEventListener('click', () => {
     }
 })
 
-//Mooving cards in the columns to the right and updating the task.state in currentTasks variable
+//Mooving cards in the columns to the right and updating the task.state in project1Tasks variable
 btnRight.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
-    let focusedTask = currentTasks.find(task => task.id === selectedCard.id);
+    let focusedTask = project1Tasks.find(task => task.id === selectedCard.id);
     switch (focusedTask.state) {
         case 'todo':
             columns[1].appendChild(selectedCard)
@@ -114,17 +123,17 @@ btnRight.addEventListener('click', () => {
     }
 })
 
-//removing selected card from DOM and from currentTasks variable
+//removing selected card from DOM and from project1Tasks variable
 btnDelete.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
-    currentTasks = currentTasks.filter(task => task.id !== selectedCard.id);
+    project1Tasks = project1Tasks.filter(task => task.id !== selectedCard.id);
     selectedCard.remove();
-    console.log(currentTasks);
+    console.log(project1Tasks);
 })
 
-//Saving currentTasks to localStorage and showing success alert then hide it
+//Saving project1Tasks to localStorage and showing success alert then hide it
 btnSave.addEventListener('click', () => {
-    localStorage.setItem('currentTasks', JSON.stringify(currentTasks));
+    localStorage.setItem('project1Tasks', JSON.stringify(project1Tasks));
     document.getElementById("alert").classList.add('d-flex');
     setTimeout(() => {
         document.getElementById("alert").classList.remove('d-flex');
@@ -193,15 +202,16 @@ function addCard(task, element) {
 }
 
 function appendTaskToDom(task) {
+    let activeColumns = document.querySelector('*[style="display: block;"]').querySelectorAll('.col');
     switch (task.state) {
         case 'todo':
-            addCard(task, columns[0]);
+            addCard(task, activeColumns[0]);
             break;
         case 'inprogress':
-            addCard(task, columns[1]);
+            addCard(task, activeColumns[1]);
             break;
         case 'done':
-            addCard(task, columns[2]);
+            addCard(task, activeColumns[2]);
             break;
     }
 }
@@ -221,15 +231,10 @@ btnAddForm.addEventListener('click', (e) => {
         taskIDCount++;
         let newTaskID = 'task-#' + taskIDCount;
         let newTask = new Task(taskText, taskState, newTaskID, taskPrio, taskDeadline);
-        currentTasks.push(newTask);
+        project1Tasks.push(newTask);
         appendTaskToDom(newTask);
         document.getElementById("myForm").style.display = "none";
     }
 })
 
-//adding eventlisteners for the tab buttons, to open project tabs
-tabButtons.forEach((tabButton) => {
-    tabButton.addEventListener('click', (event) => {
-        openProject(event, tabButton.value)
-    })
-})
+
