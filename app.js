@@ -95,13 +95,15 @@ columns.forEach(column => {
 btnLeft.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
     let focusedTask = project1Tasks.find(task => task.id === selectedCard.id);
+    let activeColumns = document.querySelector('*[style="display: block;"]').querySelectorAll('.col');
+
     switch (focusedTask.state) {
         case 'inprogress':
-            columns[0].appendChild(selectedCard)
+            activeColumns[0].appendChild(selectedCard)
             focusedTask.state = 'todo';
             break;
         case 'done':
-            columns[1].appendChild(selectedCard)
+            activeColumns[1].appendChild(selectedCard)
             focusedTask.state = 'inprogress';
             break;
     }
@@ -111,13 +113,15 @@ btnLeft.addEventListener('click', () => {
 btnRight.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
     let focusedTask = project1Tasks.find(task => task.id === selectedCard.id);
+    let activeColumns = document.querySelector('*[style="display: block;"]').querySelectorAll('.col');
+
     switch (focusedTask.state) {
         case 'todo':
-            columns[1].appendChild(selectedCard)
+            activeColumns[1].appendChild(selectedCard)
             focusedTask.state = 'inprogress';
             break;
         case 'inprogress':
-            columns[2].appendChild(selectedCard)
+            activeColumns[2].appendChild(selectedCard)
             focusedTask.state = 'done';
             break;
     }
@@ -201,6 +205,7 @@ function addCard(task, element) {
     }
 }
 
+//determing which project is active and append task to the matching column by task-state
 function appendTaskToDom(task) {
     let activeColumns = document.querySelector('*[style="display: block;"]').querySelectorAll('.col');
     switch (task.state) {
