@@ -85,6 +85,31 @@ h1 {
   display: none;
 }
 
+.low-prior {
+  background-color: #bde0fe;
+}
+
+.medium-prior {
+  background-color: #f2e682;
+}
+
+.high-prior {
+  background-color: #ec8796;
+}
+
+/*cardhoovering showes title attribute of the card*/
+.card:hover:after {
+  position: absolute;
+  content: attr(title);
+  display: inline-block;
+  left: 0px;
+  top: 0px;
+  padding: 5px;
+  background-color: black;
+  color: white;
+}
+
+
 
 
 
@@ -161,14 +186,3 @@ h1 {
 
 
 
-.low-prior {
-  background-color: #bde0fe;
-}
-
-.medium-prior {
-  background-color: #f2e682;
-}
-
-.high-prior {
-  background-color: #ec8796;
-}

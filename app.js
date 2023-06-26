@@ -13,11 +13,12 @@ import { addEventListeners } from "./events.js"
 
 
 class Task {
-    constructor(text, state, id, priority = '1') {
+    constructor(text, state, id, priority = 'low', deadline = '2023-12-01') {
         this.text = text;
         this.state = state;
         this.id = id;
-        this.priority = priority
+        this.priority = priority;
+        this.deadline = deadline
     }
 }
 
@@ -34,7 +35,6 @@ if (localStorage.getItem('currentTasks')) {
     currentTasks.push(testTask1, testTask2, testTask3);
 }
 
-
 //append testTasks to the DOM
 currentTasks.forEach(task => {
     appendTaskToDom(task)
@@ -44,7 +44,6 @@ currentTasks.forEach(task => {
 draggables.forEach(draggable => {
     addEventListeners(draggable)
 })
-
 
 // Call a reduce function which will loop through the list of draggable elements and also specify the single element after the mouse cursor.
 // Return the reduce function by adding the first element as closest and the second as a child. Also, equate the offset and add conditions.
@@ -78,8 +77,6 @@ columns.forEach(column => {
         }
     })
 })
-
-
 
 //Mooving cards in the columns to the left and updating the task.state in currentTasks variable
 btnLeft.addEventListener('click', () => {
@@ -157,25 +154,23 @@ function addCard(task, element) {
     //determ priority css class
     let cardBodyClassList = '';
     switch (task.priority) {
-        case '1':
+        case 'low':
             cardBodyClassList = 'card-body low-prior';
             break;
-        case '2':
+        case 'medium':
             cardBodyClassList = 'card-body medium-prior'
             break;
-        case '3':
+        case 'high':
             cardBodyClassList = 'card-body high-prior'
             break;
     }
-
-    console.log(cardBodyClassList);
 
     if (element.children.length < 7) {
         element.
             appendChild(
                 Object.assign(
                     document.createElement('div'),
-                    { className: 'card', draggable: true, id: task.id }
+                    { className: 'card', draggable: true, id: task.id, title: task.deadline }
                 )
             ).appendChild(
                 Object.assign(
@@ -216,10 +211,12 @@ btnAddForm.addEventListener('click', (e) => {
         let taskState = document.forms["newTaskForm"]["state"].value;
         document.forms["newTaskForm"]["state"].value = 'todo';
         let taskPrio = document.forms["newTaskForm"]["priority"].value;
-        document.forms["newTaskForm"]["priority"].value = '1';
+        document.forms["newTaskForm"]["priority"].value = 'low';
+        let taskDeadline = document.forms["newTaskForm"]["deadline"].value;
+        document.forms["newTaskForm"]["deadline"].value = '2023-07-22';
         taskIDCount++;
         let newTaskID = 'task-#' + taskIDCount;
-        let newTask = new Task(taskText, taskState, newTaskID, taskPrio);
+        let newTask = new Task(taskText, taskState, newTaskID, taskPrio, taskDeadline);
         currentTasks.push(newTask);
         appendTaskToDom(newTask);
         document.getElementById("myForm").style.display = "none";
