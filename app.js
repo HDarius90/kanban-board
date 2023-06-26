@@ -216,7 +216,7 @@ btnAddForm.addEventListener('click', (e) => {
         let taskState = document.forms["newTaskForm"]["state"].value;
         document.forms["newTaskForm"]["state"].value = 'todo';
         let taskPrio = document.forms["newTaskForm"]["priority"].value;
-        document.forms["newTaskForm"]["state"].value = '1';
+        document.forms["newTaskForm"]["priority"].value = '1';
         taskIDCount++;
         let newTaskID = 'task-#' + taskIDCount;
         let newTask = new Task(taskText, taskState, newTaskID, taskPrio);
