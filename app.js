@@ -7,9 +7,13 @@ const btnSave = document.querySelector('.btn-save')
 const btnOpenForm = document.querySelector('.open-button')
 const btnCancelForm = document.querySelector('button.cancel')
 const btnAddForm = document.querySelector('button.add')
-
+const tabButtons = document.querySelectorAll('button.tablinks')
 
 import { addEventListeners } from "./events.js"
+import { openProject } from "./tabs.js"
+
+
+
 
 
 class Task {
@@ -223,4 +227,9 @@ btnAddForm.addEventListener('click', (e) => {
     }
 })
 
-
+//adding eventlisteners for the tab buttons, to open project tabs
+tabButtons.forEach((tabButton) => {
+    tabButton.addEventListener('click', (event) => {
+        openProject(event, tabButton.value)
+    })
+})

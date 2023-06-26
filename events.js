@@ -19,4 +19,9 @@ export function addEventListeners(element) {
         let newTaskText = prompt('Rename task:');
         if (newTaskText) element.firstElementChild.firstElementChild.textContent = newTaskText;
     })
+
+    element.addEventListener('hoover', () => {
+        let newTaskText = prompt('Rename task:');
+        if (newTaskText) element.firstElementChild.firstElementChild.textContent = newTaskText;
+    })
 }
