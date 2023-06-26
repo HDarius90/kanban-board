@@ -114,7 +114,7 @@ h1 {
 
 /* Add styles to the form container */
 .form-container {
-  max-width: 300px;
+  max-width: 310px;
   padding: 10px;
   background-color: white;
 }
@@ -157,4 +157,18 @@ h1 {
 .form-container .btn:hover,
 .open-button:hover {
   opacity: 1;
+}
+
+
+
+.low-prior {
+  background-color: #bde0fe;
+}
+
+.medium-prior {
+  background-color: #f2e682;
+}
+
+.high-prior {
+  background-color: #ec8796;
 }

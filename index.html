@@ -93,11 +93,33 @@
             <label for="task-text"><b>Text</b></label>
             <input type="text" id="task-text" placeholder="Enter New Task" name="taskText" required>
 
+            <span class="form-check-title"><b>Status</b></span> <br>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="state" id="todo" value="todo" checked>
+                <label class="form-check-label" for="todo">To Do</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="state" id="inprogress" value="inprogress" >
+                <label class="form-check-label" for="inprogress">In Progress</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="state" id="done" value="done" >
+                <label class="form-check-label" for="done">Done</label>
+              </div>
 
-            <label for="todo"><input type="radio" id="todo" name="state" value="todo" checked> To Do</label><br>
-            <label for="inprogress"><input type="radio" id="inprogress" name="state" value="inprogress"> In
-                Progress</label><br>
-            <label for="done"><input type="radio" id="done" name="state" value="done"> Done</label>
+              <span class="form-check-title"><b>Priority</b></span> <br>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="priority" id="prio-1" value="1" checked>
+                <label class="form-check-label" for="prio-1">1</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="priority" id="prio-2" value="2" >
+                <label class="form-check-label" for="prio-2">2</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="priority" id="prio-3" value="3" >
+                <label class="form-check-label" for="prio-3">3</label>
+              </div>
 
             <button type="submit" class="btn add">Add</button>
             <button type="button" class="btn cancel">Close</button>

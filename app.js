@@ -13,10 +13,11 @@ import { addEventListeners } from "./events.js"
 
 
 class Task {
-    constructor(text, state, id) {
+    constructor(text, state, id, priority = '1') {
         this.text = text;
         this.state = state;
         this.id = id;
+        this.priority = priority
     }
 }
 
@@ -152,6 +153,23 @@ btnCancelForm.addEventListener('click', () => {
 
 //makes a Card element from task object and append it to an element if the element has less then 7 children, and add eventlisteners
 function addCard(task, element) {
+
+    //determ priority css class
+    let cardBodyClassList = '';
+    switch (task.priority) {
+        case '1':
+            cardBodyClassList = 'card-body low-prior';
+            break;
+        case '2':
+            cardBodyClassList = 'card-body medium-prior'
+            break;
+        case '3':
+            cardBodyClassList = 'card-body high-prior'
+            break;
+    }
+
+    console.log(cardBodyClassList);
+
     if (element.children.length < 7) {
         element.
             appendChild(
@@ -162,7 +180,7 @@ function addCard(task, element) {
             ).appendChild(
                 Object.assign(
                     document.createElement('div'),
-                    { className: 'card-body' }
+                    { className: cardBodyClassList }
                 )
             ).appendChild(
                 Object.assign(
@@ -173,7 +191,6 @@ function addCard(task, element) {
 
         addEventListeners(element.lastChild);
     }
-
 }
 
 function appendTaskToDom(task) {
@@ -198,9 +215,11 @@ btnAddForm.addEventListener('click', (e) => {
         document.forms["newTaskForm"]["taskText"].value = '';
         let taskState = document.forms["newTaskForm"]["state"].value;
         document.forms["newTaskForm"]["state"].value = 'todo';
+        let taskPrio = document.forms["newTaskForm"]["priority"].value;
+        document.forms["newTaskForm"]["state"].value = '1';
         taskIDCount++;
         let newTaskID = 'task-#' + taskIDCount;
-        let newTask = new Task(taskText, taskState, newTaskID);
+        let newTask = new Task(taskText, taskState, newTaskID, taskPrio);
         currentTasks.push(newTask);
         appendTaskToDom(newTask);
         document.getElementById("myForm").style.display = "none";
