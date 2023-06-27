@@ -46,16 +46,15 @@ document.getElementById("defaultOpen").click();
 
 
 class Task {
-    constructor(text, state, id, priority = 'low', deadline = '2023-12-01') {
+    constructor(text, state,  priority = 'low', deadline = '2023-12-01') {
         this.text = text;
         this.state = state;
-        this.id = id;
+        this.id = getRandomID();
         this.priority = priority;
         this.deadline = deadline
     }
 }
 
-let taskIDCount = 3;
 
 //Apply all the event listeners to all draggable elements
 draggables.forEach(draggable => {
@@ -103,6 +102,10 @@ function getIndexOfActiveTab(allTabs) {
         }
     }
 }
+
+function getRandomID() {
+    return Math.floor(Math.random() * 1000 + 1);
+  }
 
 //Mooving cards in the columns to the left and updating the task.state in project1Tasks variable
 btnLeft.addEventListener('click', () => {
@@ -254,13 +257,10 @@ btnAddForm.addEventListener('click', (e) => {
         document.forms["newTaskForm"]["priority"].value = 'low';
         let taskDeadline = document.forms["newTaskForm"]["deadline"].value;
         document.forms["newTaskForm"]["deadline"].value = '2023-07-22';
-        taskIDCount++;
-        let newTaskID = 'task-#' + taskIDCount;
-        let newTask = new Task(taskText, taskState, newTaskID, taskPrio, taskDeadline);
+        let newTask = new Task(taskText, taskState, taskPrio, taskDeadline);
         allProjects[getIndexOfActiveTab(allTabs)].push(newTask);
         appendTaskToDom(newTask);
         document.getElementById("myForm").style.display = "none";
-        console.log(newTask);
     }
 })
 
