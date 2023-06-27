@@ -1,5 +1,5 @@
 //Add all the event listeners to the card element
-export function addEventListeners(element) {
+export function addEventListeners(element, allProjects) {
     element.addEventListener('dragstart', () => {
         element.classList.add('dragging');  //Add dragging class when dragstart
     })
@@ -14,18 +14,26 @@ export function addEventListeners(element) {
         try {
             if (prevFocus !== element) prevFocus.classList.remove('focus'); //If there is already a focus class element, then compare 
             //it, and if it is the same then remove the focus class instead of toggle
-        } catch (error) {//prevent error message on the console if focus class does not exist jet
-
+        } catch (error) {
+            //catch classlist error
         }
     })
 
+    //rename tasks on dbclick event and update text on project object
     element.addEventListener('dblclick', () => {
         let newTaskText = prompt('Rename task:');
-        if (newTaskText) element.firstElementChild.firstElementChild.textContent = newTaskText;
-    })
+        if (newTaskText) {
+            element.firstElementChild.firstElementChild.textContent = newTaskText;
+            console.log(allProjects);
+            for (let i = 0; i < allProjects.length; i++){
+              for (let z = 0; z < allProjects[i].length; z++){
+                  console.log(allProjects[i][z]);
 
-    element.addEventListener('hoover', () => {
-        let newTaskText = prompt('Rename task:');
-        if (newTaskText) element.firstElementChild.firstElementChild.textContent = newTaskText;
+                if (allProjects[i][z].id === element.id) {
+                    allProjects[i][z].text = newTaskText;
+                }
+              }
+            }
+        }
     })
 }

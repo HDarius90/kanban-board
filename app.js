@@ -1,4 +1,3 @@
-const draggables = document.querySelectorAll('[draggable=true]')
 const columns = document.querySelectorAll('.col')
 const btnLeft = document.querySelector('.btn-left')
 const btnRight = document.querySelector('.btn-right')
@@ -10,6 +9,7 @@ const btnAddForm = document.querySelector('button.add')
 const tabButtons = document.querySelectorAll('button.tablinks')
 let tabcontent = document.querySelectorAll('.tabcontent');
 let allTabs = document.querySelectorAll('.tablinks');
+let addProject = document.querySelector('#add-content');
 
 
 
@@ -34,6 +34,15 @@ for (let i = 0; i < allProjects.length; i++) {
     })
 }
 
+const draggables = document.querySelectorAll('[draggable=true]')
+
+
+//Apply all the event listeners to all draggable elements
+draggables.forEach(card => {
+    addEventListeners(card, allProjects)
+})
+
+
 //adding eventlisteners for the tab buttons, to open project tabs
 tabButtons.forEach((tabButton) => {
     tabButton.addEventListener('click', (event) => {
@@ -44,9 +53,13 @@ tabButtons.forEach((tabButton) => {
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
 
+/* addProject.addEventListener('click', ()=> {
+    let newProjectName = 
+}) */
+
 
 class Task {
-    constructor(text, state,  priority = 'low', deadline = '2023-12-01') {
+    constructor(text, state, priority = 'low', deadline = '2023-12-01') {
         this.text = text;
         this.state = state;
         this.id = getRandomID();
@@ -54,11 +67,6 @@ class Task {
         this.deadline = deadline
     }
 }
-
-//Apply all the event listeners to all draggable elements
-draggables.forEach(draggable => {
-    addEventListeners(draggable)
-})
 
 //add dragover event for hovering elements around
 columns.forEach(column => {
@@ -80,7 +88,7 @@ btnLeft.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
     let focusedTask = allProjects[getIndexOfActiveTab(allTabs)].find(task => task.id === selectedCard.id);
     let activeColumns = document.querySelector('*[style="display: block;"]').querySelectorAll('.col');
-    
+
     switch (focusedTask.state) {
         case 'inprogress':
             activeColumns[0].appendChild(selectedCard)
@@ -163,5 +171,3 @@ btnAddForm.addEventListener('click', (e) => {
         document.getElementById("myForm").style.display = "none";
     }
 })
-
-
