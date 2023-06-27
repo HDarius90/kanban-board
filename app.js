@@ -14,7 +14,7 @@ let allTabs = document.querySelectorAll('.tablinks');
 
 
 import { addEventListeners } from "./events.js"
-import { openProject } from "./tabs.js"
+import { getDragAfterElement, getIndexOfActiveTab, getRandomID, validateForm, addCard, appendTaskToDom, openProject } from "./functions.js"
 
 
 //try to parse allProject from local storage and if it does not exist then create in it as many empty arrays as many project tabs we have
@@ -30,7 +30,7 @@ if (!allProjects) {
 for (let i = 0; i < allProjects.length; i++) {
     let columnsToAppend = tabcontent[i].querySelectorAll('.col');
     allProjects[i].forEach((task) => {
-        appendTaskToDom(task, columnsToAppend)
+        appendTaskToDom(task, addCard, columnsToAppend)
     })
 }
 
@@ -55,29 +55,10 @@ class Task {
     }
 }
 
-
 //Apply all the event listeners to all draggable elements
 draggables.forEach(draggable => {
     addEventListeners(draggable)
 })
-
-// Call a reduce function which will loop through the list of draggable elements and also specify the single element after the mouse cursor.
-// Return the reduce function by adding the first element as closest and the second as a child. Also, equate the offset and add conditions.
-function getDragAfterElement(column, y) {
-    const draggableElements = [...column.querySelectorAll('[draggable=true]:not(.dragging)')]
-
-
-    return draggableElements.reduce((closest, child) => {
-        const box = child.getBoundingClientRect()
-        const offset = y - box.top - box.height / 2
-        if (offset < 0 && offset > closest.offset) {
-            return { offset: offset, element: child }
-        }
-        else {
-            return closest
-        }
-    }, { offset: Number.NEGATIVE_INFINITY }).element
-}
 
 //add dragover event for hovering elements around
 columns.forEach(column => {
@@ -93,20 +74,6 @@ columns.forEach(column => {
         }
     })
 })
-
-//check which tab has active class and return the index number of it
-function getIndexOfActiveTab(allTabs) {
-    for (let i = 0; i < allTabs.length; i++) {
-        if (allTabs[i].classList.contains('active')) {
-            return i;
-        }
-    }
-}
-
-//generate random task ID between 1 and 1000 and convert it to string
-function getRandomID() {
-    return Math.floor(Math.random() * 1000 + 1).toString();
-  }
 
 //Mooving cards in the columns to the left and updating the task.state in project1Tasks variable
 btnLeft.addEventListener('click', () => {
@@ -167,16 +134,6 @@ btnSave.addEventListener('click', () => {
     }, 3000)
 })
 
-//Check if user filled out text input field and return boolean
-function validateForm() {
-    let taskText = document.forms["newTaskForm"]["taskText"].value;
-    if (taskText == "") {
-        alert("Text must be filled out");
-        return false;
-    }
-    return true;
-}
-
 //Show form
 btnOpenForm.addEventListener('click', () => {
     document.getElementById("myForm").style.display = "block";
@@ -187,64 +144,6 @@ btnCancelForm.addEventListener('click', () => {
     document.getElementById("myForm").style.display = "none";
 
 })
-
-//makes a Card element from task object and append it to an element if the element has less then 7 children, and add eventlisteners
-function addCard(task, element) {
-
-    //determ priority css class
-    let cardBodyClassList = '';
-    switch (task.priority) {
-        case 'low':
-            cardBodyClassList = 'card-body low-prior';
-            break;
-        case 'medium':
-            cardBodyClassList = 'card-body medium-prior'
-            break;
-        case 'high':
-            cardBodyClassList = 'card-body high-prior'
-            break;
-    }
-
-    if (element.children.length < 7) {
-        element.
-            appendChild(
-                Object.assign(
-                    document.createElement('div'),
-                    { className: 'card', draggable: true, id: task.id, title: task.deadline }
-                )
-            ).appendChild(
-                Object.assign(
-                    document.createElement('div'),
-                    { className: cardBodyClassList }
-                )
-            ).appendChild(
-                Object.assign(
-                    document.createElement('span'),
-                    { innerText: task.text }
-                )
-            )
-
-        addEventListeners(element.lastChild);
-    }
-}
-
-//determing which project is active and append task to the matching column by task-state
-function appendTaskToDom(task, activeColumns) {
-    if (activeColumns === undefined) {
-        activeColumns = document.querySelector('*[style="display: block;"]').querySelectorAll('.col');
-    }
-    switch (task.state) {
-        case 'todo':
-            addCard(task, activeColumns[0]);
-            break;
-        case 'inprogress':
-            addCard(task, activeColumns[1]);
-            break;
-        case 'done':
-            addCard(task, activeColumns[2]);
-            break;
-    }
-}
 
 //if form valid then creates new Task object from input fields value, push it on the vurrentTasks array, and append it to the DOM then hide the form
 btnAddForm.addEventListener('click', (e) => {
@@ -260,7 +159,7 @@ btnAddForm.addEventListener('click', (e) => {
         document.forms["newTaskForm"]["deadline"].value = '2023-07-22';
         let newTask = new Task(taskText, taskState, taskPrio, taskDeadline);
         allProjects[getIndexOfActiveTab(allTabs)].push(newTask);
-        appendTaskToDom(newTask);
+        appendTaskToDom(newTask, addCard);
         document.getElementById("myForm").style.display = "none";
     }
 })
