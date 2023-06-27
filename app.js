@@ -103,8 +103,9 @@ function getIndexOfActiveTab(allTabs) {
     }
 }
 
+//generate random task ID between 1 and 1000 and convert it to string
 function getRandomID() {
-    return Math.floor(Math.random() * 1000 + 1);
+    return Math.floor(Math.random() * 1000 + 1).toString();
   }
 
 //Mooving cards in the columns to the left and updating the task.state in project1Tasks variable
