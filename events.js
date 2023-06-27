@@ -11,8 +11,12 @@ export function addEventListeners(element) {
     element.addEventListener('click', () => {
         let prevFocus = document.querySelector('.focus')
         element.classList.toggle('focus')  //Toogle focus class on clicked element
-        if (prevFocus !== element) prevFocus.classList.remove('focus'); //If there is already a focus class element, then compare 
-        //it, and if it is the same then remove the focus class instead of toggle
+        try {
+            if (prevFocus !== element) prevFocus.classList.remove('focus'); //If there is already a focus class element, then compare 
+            //it, and if it is the same then remove the focus class instead of toggle
+        } catch (error) {//prevent error message on the console if focus class does not exist jet
+
+        }
     })
 
     element.addEventListener('dblclick', () => {

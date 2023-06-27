@@ -8,10 +8,31 @@ const btnOpenForm = document.querySelector('.open-button')
 const btnCancelForm = document.querySelector('button.cancel')
 const btnAddForm = document.querySelector('button.add')
 const tabButtons = document.querySelectorAll('button.tablinks')
+let tabcontent = document.querySelectorAll('.tabcontent');
+let allTabs = document.querySelectorAll('.tablinks');
+
+
 
 import { addEventListeners } from "./events.js"
 import { openProject } from "./tabs.js"
 
+
+//try to parse allProject from local storage and if it does not exist then create in it as many empty arrays as many project tabs we have
+let allProjects = JSON.parse(localStorage.getItem('allProjects'));
+if (!allProjects) {
+    allProjects = [];
+    for (let i = 0; i < tabcontent.length; i++) {
+        allProjects.push([]);
+    }
+}
+
+//append all Task from allProjects to the DOM 
+for (let i = 0; i < allProjects.length; i++) {
+    let columnsToAppend = tabcontent[i].querySelectorAll('.col');
+    allProjects[i].forEach((task) => {
+        appendTaskToDom(task, columnsToAppend)
+    })
+}
 
 //adding eventlisteners for the tab buttons, to open project tabs
 tabButtons.forEach((tabButton) => {
@@ -35,34 +56,6 @@ class Task {
 }
 
 let taskIDCount = 3;
-
-
-//projectTasks holdes all the task objects. If it is exist then load it from local storage instead of creating testTasks.
-let allProjects = [];
-let project1Tasks = [];
-let project2Tasks = [];
-if (localStorage.getItem('allProjects')) {
-    allProjects = JSON.parse(localStorage.getItem('allProjects'));
-} else {
-    let testTask1 = new Task("This is just text within a card body", "todo", "task-#1");
-    let testTask2 = new Task("This is some text within a card body", "inprogress", "task-#2");
-    let testTask3 = new Task("This is some more text within a card body", "done", "task-#3");
-    project1Tasks.push(testTask1, testTask2, testTask3);
-    project2Tasks.push(testTask1, testTask2);
-    allProjects.push(project1Tasks, project2Tasks);
-}
-
-//append previous Tasks to the Projects 
-let tabcontent = document.querySelectorAll('.tabcontent');
-for (let i = 0; i < allProjects.length; i++) {
-    let columnsToAppend = tabcontent[i].querySelectorAll('.col');
-    allProjects[i].forEach((task) => {
-        appendTaskToDom(task, columnsToAppend)
-    })
-}
-
-
-
 
 //Apply all the event listeners to all draggable elements
 draggables.forEach(draggable => {
@@ -102,12 +95,21 @@ columns.forEach(column => {
     })
 })
 
+//check which tab has active class and return the index number of it
+function getIndexOfActiveTab(allTabs) {
+    for (let i = 0; i < allTabs.length; i++) {
+        if (allTabs[i].classList.contains('active')) {
+            return i;
+        }
+    }
+}
+
 //Mooving cards in the columns to the left and updating the task.state in project1Tasks variable
 btnLeft.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
-    let focusedTask = project1Tasks.find(task => task.id === selectedCard.id);
+    let focusedTask = allProjects[getIndexOfActiveTab(allTabs)].find(task => task.id === selectedCard.id);
     let activeColumns = document.querySelector('*[style="display: block;"]').querySelectorAll('.col');
-
+    
     switch (focusedTask.state) {
         case 'inprogress':
             activeColumns[0].appendChild(selectedCard)
@@ -123,7 +125,7 @@ btnLeft.addEventListener('click', () => {
 //Mooving cards in the columns to the right and updating the task.state in project1Tasks variable
 btnRight.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
-    let focusedTask = project1Tasks.find(task => task.id === selectedCard.id);
+    let focusedTask = allProjects[getIndexOfActiveTab(allTabs)].find(task => task.id === selectedCard.id);
     let activeColumns = document.querySelector('*[style="display: block;"]').querySelectorAll('.col');
 
     switch (focusedTask.state) {
@@ -145,6 +147,7 @@ btnDelete.addEventListener('click', () => {
     for (let i = 0; i < allTabs.length; i++) {
         if (allTabs[i].classList.contains('active')) {
             allProjects[i] = allProjects[i].filter(task => task.id !== selectedCard.id);
+            console.log(allProjects[i]);
         }
 
     }
@@ -254,15 +257,10 @@ btnAddForm.addEventListener('click', (e) => {
         taskIDCount++;
         let newTaskID = 'task-#' + taskIDCount;
         let newTask = new Task(taskText, taskState, newTaskID, taskPrio, taskDeadline);
-        let allTabs = document.querySelectorAll('.tablinks');
-        for (let i = 0; i < allTabs.length; i++) {
-            if (allTabs[i].classList.contains('active')) {
-                allProjects[i].push(newTask)
-            }
-
-        }
+        allProjects[getIndexOfActiveTab(allTabs)].push(newTask);
         appendTaskToDom(newTask);
         document.getElementById("myForm").style.display = "none";
+        console.log(newTask);
     }
 })
 
