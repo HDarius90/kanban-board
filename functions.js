@@ -204,5 +204,20 @@ export function AddNewTabContent(projectName) {
                 { innerText: "Done" }
             )
         )
-        console.log(tabContentHolder);
+
+        return tabContentHolder.lastChild;
+}
+
+export function dragOver (column) {
+    column.addEventListener('dragover', e => {
+        e.preventDefault()
+        const afterElement = getDragAfterElement(column, e.clientY)
+        const draggable = document.querySelector('.dragging') //set the current draggable element then append it to the current container
+        if (afterElement == null) {                         // set conditions and check the AfterElements, 
+            column.appendChild(draggable)                      //and if it is set to null, append a child at the end of the list.
+        }
+        else {
+            column.insertBefore(draggable, afterElement)     // Else, add the element draggable and afterElement as parameters in the insertBefore function.
+        }
+    })
 }

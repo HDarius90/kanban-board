@@ -14,7 +14,7 @@ let addProject = document.querySelector('#add-content');
 
 
 import { addEventListeners } from "./cardevents.js"
-import { getDragAfterElement, getIndexOfActiveTab, getRandomID, validateForm, addCard, appendTaskToDom, openProject, AddNewProjectTab, AddNewTabContent } from "./functions.js"
+import { dragOver, getIndexOfActiveTab, getRandomID, validateForm, addCard, appendTaskToDom, openProject, AddNewProjectTab, AddNewTabContent } from "./functions.js"
 
 
 class Task {
@@ -65,10 +65,15 @@ document.getElementById("defaultOpen").click();
 
 
 //creating new project when clicking to the add button on tab
-addProject.addEventListener('click', ()=> {
-    let newProjectName =  prompt('Name of the project:');
+addProject.addEventListener('click', () => {
+    let newProjectName = prompt('Name of the project:');
     let newTab = AddNewProjectTab(newProjectName);
-    AddNewTabContent(newProjectName);
+    let newTabContent = AddNewTabContent(newProjectName);
+    console.log(newTabContent.lastChild.lastChild.childNodes);
+    newTabContent.lastChild.lastChild.childNodes.forEach(column => {
+        dragOver(column);
+    })
+
     newTab.addEventListener('click', (event) => {
         openProject(event, newTab.value)
     })
@@ -80,17 +85,7 @@ addProject.addEventListener('click', ()=> {
 
 //add dragover event for hovering elements around
 columns.forEach(column => {
-    column.addEventListener('dragover', e => {
-        e.preventDefault()
-        const afterElement = getDragAfterElement(column, e.clientY)
-        const draggable = document.querySelector('.dragging') //set the current draggable element then append it to the current container
-        if (afterElement == null) {                         // set conditions and check the AfterElements, 
-            column.appendChild(draggable)                      //and if it is set to null, append a child at the end of the list.
-        }
-        else {
-            column.insertBefore(draggable, afterElement)     // Else, add the element draggable and afterElement as parameters in the insertBefore function.
-        }
-    })
+    dragOver(column);
 })
 
 //Mooving cards in the columns to the left and updating the task.state in project1Tasks variable
@@ -176,7 +171,12 @@ btnAddForm.addEventListener('click', (e) => {
         let taskDeadline = document.forms["newTaskForm"]["deadline"].value;
         document.forms["newTaskForm"]["deadline"].value = '2023-07-22';
         let newTask = new Task(taskText, taskState, taskPrio, taskDeadline);
-        allProjects[getIndexOfActiveTab(allTabs)].push(newTask);
+        if (allProjects[getIndexOfActiveTab(allTabs)]) {
+            allProjects[getIndexOfActiveTab(allTabs)].push(newTask);
+        } else {
+            let newProject = [newTask];
+            allProjects.push(newProject);
+        }
         appendTaskToDom(newTask, addCard);
         document.getElementById("myForm").style.display = "none";
     }
