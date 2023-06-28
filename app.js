@@ -13,9 +13,19 @@ let addProject = document.querySelector('#add-content');
 
 
 
-import { addEventListeners } from "./events.js"
-import { getDragAfterElement, getIndexOfActiveTab, getRandomID, validateForm, addCard, appendTaskToDom, openProject } from "./functions.js"
+import { addEventListeners } from "./cardevents.js"
+import { getDragAfterElement, getIndexOfActiveTab, getRandomID, validateForm, addCard, appendTaskToDom, openProject, AddNewProjectTab, AddNewTabContent } from "./functions.js"
 
+
+class Task {
+    constructor(text, state, priority = 'low', deadline = '2023-12-01') {
+        this.text = text;
+        this.state = state;
+        this.id = getRandomID();
+        this.priority = priority;
+        this.deadline = deadline
+    }
+}
 
 //try to parse allProject from local storage and if it does not exist then create in it as many empty arrays as many project tabs we have
 let allProjects = JSON.parse(localStorage.getItem('allProjects'));
@@ -53,20 +63,20 @@ tabButtons.forEach((tabButton) => {
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
 
-/* addProject.addEventListener('click', ()=> {
-    let newProjectName = 
-}) */
+
+//creating new project when clicking to the add button on tab
+addProject.addEventListener('click', ()=> {
+    let newProjectName =  prompt('Name of the project:');
+    let newTab = AddNewProjectTab(newProjectName);
+    AddNewTabContent(newProjectName);
+    newTab.addEventListener('click', (event) => {
+        openProject(event, newTab.value)
+    })
+    newTab.click();
+})
 
 
-class Task {
-    constructor(text, state, priority = 'low', deadline = '2023-12-01') {
-        this.text = text;
-        this.state = state;
-        this.id = getRandomID();
-        this.priority = priority;
-        this.deadline = deadline
-    }
-}
+
 
 //add dragover event for hovering elements around
 columns.forEach(column => {
