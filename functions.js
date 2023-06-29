@@ -18,11 +18,11 @@ export function getDragAfterElement(column, y) {
     }, { offset: Number.NEGATIVE_INFINITY }).element
 }
 
-//check which tab has active class and return the index number of it
-export function getIndexOfActiveTab(allTabs) {
+//check which tab has active class and return the button element
+export function getActiveTab(allTabs) {
     for (let i = 0; i < allTabs.length; i++) {
         if (allTabs[i].classList.contains('active')) {
-            return i;
+            return allTabs[i];
         }
     }
 }
@@ -43,7 +43,7 @@ export function validateForm() {
 }
 
 //makes a Card element from task object and append it to an element if the element has less then 7 children, and add eventlisteners
-export function addCard(task, element) {
+export function addCard(task, element, allTasks) {
 
     //determ priority css class
     let cardBodyClassList = '';
@@ -78,26 +78,39 @@ export function addCard(task, element) {
                 )
             )
 
-        addEventListeners(element.lastChild);
+        addEventListeners(element.lastChild, allTasks);
     }
 }
 
-//determing which project is active and append task to the matching column by task-state
-export function appendTaskToDom(task, addCard, activeColumns) {
-    if (activeColumns === undefined) {
-        activeColumns = document.querySelector('*[style="display: block;"]').querySelectorAll('.col');
-    }
-    switch (task.state) {
-        case 'todo':
-            addCard(task, activeColumns[0]);
-            break;
-        case 'inprogress':
-            addCard(task, activeColumns[1]);
-            break;
-        case 'done':
-            addCard(task, activeColumns[2]);
-            break;
-    }
+export function appendTaskToDom(task, addCard, allTasks) {
+    let allColumns = document.querySelectorAll('.col');
+    let projectsColumns = [];
+    allColumns.forEach((col)=>{     
+        if(col.id.includes(task.projectName)){              //collects all the columns that has an id whitch contains the tasks projectname
+            projectsColumns.push(col);
+        }
+    })
+
+    projectsColumns.forEach((col)=>{                        //append task to the selected columns if task.state is included on columns.id
+        if(col.id.includes(task.state)){
+            addCard(task, col, allTasks);
+        }
+    })
+}
+
+export function mooveCardToNewStateWithButton(task, selectedCard){
+    let allColumns = document.querySelectorAll('.col');
+    allColumns.forEach((col)=>{
+        if(col.id.includes(task.projectName) && col.id.includes(task.state)){
+            col.appendChild(selectedCard);
+        }
+    })
+
+}
+
+// Where el is the DOM element you'd like to test for visibility
+export function isHidden(el) {
+    return (el.offsetParent === null)
 }
 
 export function openProject(evt, projectName) {
@@ -128,6 +141,7 @@ export function AddNewProjectTab(projectName) {
     newTab.className = 'tablinks';
     newTab.value = projectName + '-content'
     newTab.textContent = projectName;
+
     tabs.appendChild(newTab);
     return newTab;
 }
@@ -153,7 +167,7 @@ export function AddNewTabContent(projectName) {
         ).appendChild(
             Object.assign(
                 document.createElement('div'),
-                { className: "col container" }
+                { className: "col container", id: projectName+"todo" }
             )
         ).appendChild(
             Object.assign(
@@ -172,7 +186,7 @@ export function AddNewTabContent(projectName) {
         appendChild(
             Object.assign(
                 document.createElement('div'),
-                { className: "col container" }
+                { className: "col container", id: projectName+"inprogress"  }
             )
         ).appendChild(
             Object.assign(
@@ -191,7 +205,7 @@ export function AddNewTabContent(projectName) {
         appendChild(
             Object.assign(
                 document.createElement('div'),
-                { className: "col container" }
+                { className: "col container", id: projectName+"done"  }
             )
         ).appendChild(
             Object.assign(
