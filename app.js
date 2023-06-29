@@ -12,12 +12,12 @@ let addProject = document.querySelector('#add-content');
 
 import {
     dragOver, mooveCardToNewStateWithButton, getActiveTab, getRandomID, validateForm, addCard, appendTaskToDom, isHidden,
-    openProject, AddNewProjectTab, AddNewTabContent
+    openProject, AddNewProjectTab, AddNewTabContent, getDate
 } from "./functions.js"
 
 
 class Task {
-    constructor(projectName, text, state, priority = 'low', deadline = '2023-12-01') {
+    constructor(projectName, text, state, priority = 'low', deadline) {
         this.projectName = projectName;
         this.text = text;
         this.state = state;
@@ -143,6 +143,12 @@ btnCancelForm.addEventListener('click', () => {
 
 })
 
+//set current date for deadline inputfields minimum, and set the task creating forms deafult deadline 60days
+let deadlineInput = document.querySelector('#deadline');
+deadlineInput.setAttribute("min", getDate());
+deadlineInput.setAttribute("value", getDate(60));
+
+
 //if form valid then creates new Task object from input fields value, push it on the vurrentTasks array, and append it to the DOM then hide the form
 btnAddForm.addEventListener('click', (e) => {
     e.preventDefault();
@@ -156,7 +162,7 @@ btnAddForm.addEventListener('click', (e) => {
         let taskPrio = document.forms["newTaskForm"]["priority"].value;
         document.forms["newTaskForm"]["priority"].value = 'low';
         let taskDeadline = document.forms["newTaskForm"]["deadline"].value;
-        document.forms["newTaskForm"]["deadline"].value = '2023-07-22';
+        document.forms["newTaskForm"]["deadline"].value = getDate();
 
         //refress the allTabs variable and save the projectname of the newTask
         allTabs = document.querySelectorAll('.tablinks');

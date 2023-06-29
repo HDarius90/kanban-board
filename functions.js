@@ -85,23 +85,23 @@ export function addCard(task, element, allTasks) {
 export function appendTaskToDom(task, addCard, allTasks) {
     let allColumns = document.querySelectorAll('.col');
     let projectsColumns = [];
-    allColumns.forEach((col)=>{     
-        if(col.id.includes(task.projectName)){              //collects all the columns that has an id whitch contains the tasks projectname
+    allColumns.forEach((col) => {
+        if (col.id.includes(task.projectName)) {              //collects all the columns that has an id whitch contains the tasks projectname
             projectsColumns.push(col);
         }
     })
 
-    projectsColumns.forEach((col)=>{                        //append task to the selected columns if task.state is included on columns.id
-        if(col.id.includes(task.state)){
+    projectsColumns.forEach((col) => {                        //append task to the selected columns if task.state is included on columns.id
+        if (col.id.includes(task.state)) {
             addCard(task, col, allTasks);
         }
     })
 }
 
-export function mooveCardToNewStateWithButton(task, selectedCard){
+export function mooveCardToNewStateWithButton(task, selectedCard) {
     let allColumns = document.querySelectorAll('.col');
-    allColumns.forEach((col)=>{
-        if(col.id.includes(task.projectName) && col.id.includes(task.state)){
+    allColumns.forEach((col) => {
+        if (col.id.includes(task.projectName) && col.id.includes(task.state)) {
             col.appendChild(selectedCard);
         }
     })
@@ -167,7 +167,7 @@ export function AddNewTabContent(projectName) {
         ).appendChild(
             Object.assign(
                 document.createElement('div'),
-                { className: "col container", id: projectName+"todo" }
+                { className: "col container", id: projectName + "todo" }
             )
         ).appendChild(
             Object.assign(
@@ -186,7 +186,7 @@ export function AddNewTabContent(projectName) {
         appendChild(
             Object.assign(
                 document.createElement('div'),
-                { className: "col container", id: projectName+"inprogress"  }
+                { className: "col container", id: projectName + "inprogress" }
             )
         ).appendChild(
             Object.assign(
@@ -205,7 +205,7 @@ export function AddNewTabContent(projectName) {
         appendChild(
             Object.assign(
                 document.createElement('div'),
-                { className: "col container", id: projectName+"done"  }
+                { className: "col container", id: projectName + "done" }
             )
         ).appendChild(
             Object.assign(
@@ -219,10 +219,10 @@ export function AddNewTabContent(projectName) {
             )
         )
 
-        return tabContentHolder.lastChild;
+    return tabContentHolder.lastChild;
 }
 
-export function dragOver (column) {
+export function dragOver(column) {
     column.addEventListener('dragover', e => {
         e.preventDefault()
         const afterElement = getDragAfterElement(column, e.clientY)
@@ -234,4 +234,13 @@ export function dragOver (column) {
             column.insertBefore(draggable, afterElement)     // Else, add the element draggable and afterElement as parameters in the insertBefore function.
         }
     })
+}
+
+
+export function getDate(days) {
+    let currentDate = new Date();  
+    if(days){
+        currentDate.setDate(currentDate.getDate() + days);
+    }
+    return currentDate.toJSON().slice(0, 10); // "2023-06-29"
 }
