@@ -56,11 +56,13 @@ if (tabButtons.length > 0) {
 
 //creating new project when clicking to the add button on tab
 addProject.addEventListener('click', () => {
-    let newProjectName = prompt('Name of the project:')    //keeps asking projectname till user fill the input field
+    let newProjectName = prompt('Name of the project:').trim()    //keeps asking projectname till user fill the input field
     while (newProjectName === '') {
-        newProjectName = prompt('Name of the project:')
+        newProjectName = prompt('Name of the project:').trim()
     }
+    console.log(allProjectNames);
     if (newProjectName && !allProjectNames.includes(newProjectName)) {  //prevent creating empty or existing project name
+        allProjectNames.push(newProjectName);
         let newTab = AddNewProjectTab(newProjectName);          //creates new projectTab and tabcontent
         let newTabContent = AddNewTabContent(newProjectName);
         newTabContent.lastChild.lastChild.childNodes.forEach(column => {
@@ -71,9 +73,6 @@ addProject.addEventListener('click', () => {
         })
         newTab.click();
     }
-
-
-
 })
 
 //add dragover event for hovering elements around
