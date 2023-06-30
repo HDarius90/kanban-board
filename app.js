@@ -58,7 +58,7 @@ if (tabButtons.length > 0) {
 addProject.addEventListener('click', () => {
     let newProjectName = prompt('Name of the project:').trim()    //keeps asking projectname till user fill the input field
     while (newProjectName === '') {
-        newProjectName = prompt('Name of the project:').trim() //comment
+        newProjectName = prompt('Name of the project:').trim() //comment new
     }
     console.log(allProjectNames);
     if (newProjectName && !allProjectNames.includes(newProjectName)) {  //prevent creating empty or existing project name
