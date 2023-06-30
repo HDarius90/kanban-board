@@ -1,5 +1,3 @@
-const draggables = document.querySelectorAll('[draggable=true]')
-const columns = document.querySelectorAll('.col')
 const btnLeft = document.querySelector('.btn-left')
 const btnRight = document.querySelector('.btn-right')
 const btnDelete = document.querySelector('.btn-delete')
@@ -7,135 +5,131 @@ const btnSave = document.querySelector('.btn-save')
 const btnOpenForm = document.querySelector('.open-button')
 const btnCancelForm = document.querySelector('button.cancel')
 const btnAddForm = document.querySelector('button.add')
+let allTabs = document.querySelectorAll('.tablinks');
+let addProject = document.querySelector('#add-content');
 
 
-import { addEventListeners } from "./events.js"
+
+import {
+    dragOver, mooveCardToNewStateWithButton, getActiveTab, getRandomID, validateForm, addCard, appendTaskToDom, isHidden,
+    openProject, AddNewProjectTab, AddNewTabContent, getDate
+} from "./functions.js"
 
 
 class Task {
-    constructor(text, state, id, priority = 'low', deadline = '2023-12-01') {
+    constructor(projectName, text, state, priority = 'low', deadline) {
+        this.projectName = projectName;
         this.text = text;
         this.state = state;
-        this.id = id;
+        this.id = getRandomID();
         this.priority = priority;
         this.deadline = deadline
     }
 }
 
-let taskIDCount = 3;
+//try to parse allProject from local storage and if it does not exist then create empty array
+let allTasks = JSON.parse(localStorage.getItem('allTasks') || "[]");
 
-//curentTask holdes all the task objects. If it is exist then load it from local storage instead of creating testTasks.
-let currentTasks = [];
-if (localStorage.getItem('currentTasks')) {
-    currentTasks = JSON.parse(localStorage.getItem('currentTasks'));
-} else {
-    let testTask1 = new Task("This is just text within a card body", "todo", "task-#1");
-    let testTask2 = new Task("This is some text within a card body", "inprogress", "task-#2");
-    let testTask3 = new Task("This is some more text within a card body", "done", "task-#3");
-    currentTasks.push(testTask1, testTask2, testTask3);
-}
+//Rendering the projectTabs and TabContents from allTasks variable
+let allProjectNames = [];
 
-//append testTasks to the DOM
-currentTasks.forEach(task => {
-    appendTaskToDom(task)
+allTasks.forEach((task) => {
+    if (!allProjectNames.includes(task.projectName)) {
+        AddNewProjectTab(task.projectName);
+        AddNewTabContent(task.projectName);
+        allProjectNames.push(task.projectName);    //preventing rendering project more then once
+    }
+    appendTaskToDom(task, addCard, allTasks)
 })
 
-//Apply all the event listeners to all draggable elements
-draggables.forEach(draggable => {
-    addEventListeners(draggable)
-})
 
-// Call a reduce function which will loop through the list of draggable elements and also specify the single element after the mouse cursor.
-// Return the reduce function by adding the first element as closest and the second as a child. Also, equate the offset and add conditions.
-function getDragAfterElement(column, y) {
-    const draggableElements = [...column.querySelectorAll('[draggable=true]:not(.dragging)')]
-
-
-    return draggableElements.reduce((closest, child) => {
-        const box = child.getBoundingClientRect()
-        const offset = y - box.top - box.height / 2
-        if (offset < 0 && offset > closest.offset) {
-            return { offset: offset, element: child }
-        }
-        else {
-            return closest
-        }
-    }, { offset: Number.NEGATIVE_INFINITY }).element
-}
-
-//add dragover event for hovering elements around
-columns.forEach(column => {
-    column.addEventListener('dragover', e => {
-        e.preventDefault()
-        const afterElement = getDragAfterElement(column, e.clientY)
-        const draggable = document.querySelector('.dragging') //set the current draggable element then append it to the current container
-        if (afterElement == null) {                         // set conditions and check the AfterElements, 
-            column.appendChild(draggable)                      //and if it is set to null, append a child at the end of the list.
-        }
-        else {
-            column.insertBefore(draggable, afterElement)     // Else, add the element draggable and afterElement as parameters in the insertBefore function.
-        }
+//adding eventlisteners for the tab buttons, to open project tabs
+const tabButtons = document.querySelectorAll('button.tablinks')
+tabButtons.forEach((tabButton) => {
+    tabButton.addEventListener('click', (event) => {
+        openProject(event, tabButton.value)
     })
 })
+if (tabButtons.length > 0) {
+    tabButtons[0].click();  //Open the firs Tab as default if it is exist
+}
 
-//Mooving cards in the columns to the left and updating the task.state in currentTasks variable
+//creating new project when clicking to the add button on tab
+addProject.addEventListener('click', () => {
+    let newProjectName = prompt('Name of the project:').trim()    //keeps asking projectname till user fill the input field
+    while (newProjectName === '') {
+        newProjectName = prompt('Name of the project:').trim() //comment
+    }
+    console.log(allProjectNames);
+    if (newProjectName && !allProjectNames.includes(newProjectName)) {  //prevent creating empty or existing project name
+        allProjectNames.push(newProjectName);
+        let newTab = AddNewProjectTab(newProjectName);          //creates new projectTab and tabcontent
+        let newTabContent = AddNewTabContent(newProjectName);
+        newTabContent.lastChild.lastChild.childNodes.forEach(column => {
+            dragOver(column);                                   //gives dragover event to the newly appended columns
+        })
+        newTab.addEventListener('click', (event) => {
+            openProject(event, newTab.value)                //gives openProject event to the newly appended tab
+        })
+        newTab.click();
+    }
+})
+
+//add dragover event for hovering elements around
+const columns = document.querySelectorAll('.col')
+columns.forEach(column => {
+    dragOver(column);
+})
+
+//Mooving cards in the columns to the left and updating the task.state
 btnLeft.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
-    let focusedTask = currentTasks.find(task => task.id === selectedCard.id);
+    let focusedTask = allTasks.find(task => task.id === selectedCard.id);
     switch (focusedTask.state) {
         case 'inprogress':
-            columns[0].appendChild(selectedCard)
             focusedTask.state = 'todo';
+            mooveCardToNewStateWithButton(focusedTask, selectedCard)
             break;
         case 'done':
-            columns[1].appendChild(selectedCard)
             focusedTask.state = 'inprogress';
+            mooveCardToNewStateWithButton(focusedTask, selectedCard)
             break;
     }
 })
 
-//Mooving cards in the columns to the right and updating the task.state in currentTasks variable
+//Mooving cards in the columns to the right and updating the task.state
 btnRight.addEventListener('click', () => {
     let selectedCard = document.querySelector('.focus')
-    let focusedTask = currentTasks.find(task => task.id === selectedCard.id);
+    let focusedTask = allTasks.find(task => task.id === selectedCard.id);
     switch (focusedTask.state) {
         case 'todo':
-            columns[1].appendChild(selectedCard)
             focusedTask.state = 'inprogress';
+            mooveCardToNewStateWithButton(focusedTask, selectedCard)
             break;
         case 'inprogress':
-            columns[2].appendChild(selectedCard)
             focusedTask.state = 'done';
+            mooveCardToNewStateWithButton(focusedTask, selectedCard)
             break;
     }
 })
 
-//removing selected card from DOM and from currentTasks variable
+//removing selected card from DOM and from allTasks variable
 btnDelete.addEventListener('click', () => {
-    let selectedCard = document.querySelector('.focus')
-    currentTasks = currentTasks.filter(task => task.id !== selectedCard.id);
-    selectedCard.remove();
-    console.log(currentTasks);
+    let selectedCard = document.querySelector('.focus');
+    if (!isHidden(selectedCard)) {                          //preventing removing a focused element from a hiden tab
+        allTasks = allTasks.filter(task => task.id !== selectedCard.id);
+        selectedCard.remove();
+    }
 })
 
-//Saving currentTasks to localStorage and showing success alert then hide it
+//Saving allTasks to localStorage and showing success alert then hide it
 btnSave.addEventListener('click', () => {
-    localStorage.setItem('currentTasks', JSON.stringify(currentTasks));
+    localStorage.setItem('allTasks', JSON.stringify(allTasks));
     document.getElementById("alert").classList.add('d-flex');
     setTimeout(() => {
         document.getElementById("alert").classList.remove('d-flex');
     }, 3000)
 })
-
-//Check if user filled out text input field and return boolean
-function validateForm() {
-    let taskText = document.forms["newTaskForm"]["taskText"].value;
-    if (taskText == "") {
-        alert("Text must be filled out");
-        return false;
-    }
-    return true;
-}
 
 //Show form
 btnOpenForm.addEventListener('click', () => {
@@ -148,64 +142,18 @@ btnCancelForm.addEventListener('click', () => {
 
 })
 
-//makes a Card element from task object and append it to an element if the element has less then 7 children, and add eventlisteners
-function addCard(task, element) {
+//set current date for deadline inputfields minimum, and set the task creating forms deafult deadline 60days
+let deadlineInput = document.querySelector('#deadline');
+deadlineInput.setAttribute("min", getDate());
+deadlineInput.setAttribute("value", getDate(60));
 
-    //determ priority css class
-    let cardBodyClassList = '';
-    switch (task.priority) {
-        case 'low':
-            cardBodyClassList = 'card-body low-prior';
-            break;
-        case 'medium':
-            cardBodyClassList = 'card-body medium-prior'
-            break;
-        case 'high':
-            cardBodyClassList = 'card-body high-prior'
-            break;
-    }
-
-    if (element.children.length < 7) {
-        element.
-            appendChild(
-                Object.assign(
-                    document.createElement('div'),
-                    { className: 'card', draggable: true, id: task.id, title: task.deadline }
-                )
-            ).appendChild(
-                Object.assign(
-                    document.createElement('div'),
-                    { className: cardBodyClassList }
-                )
-            ).appendChild(
-                Object.assign(
-                    document.createElement('span'),
-                    { innerText: task.text }
-                )
-            )
-
-        addEventListeners(element.lastChild);
-    }
-}
-
-function appendTaskToDom(task) {
-    switch (task.state) {
-        case 'todo':
-            addCard(task, columns[0]);
-            break;
-        case 'inprogress':
-            addCard(task, columns[1]);
-            break;
-        case 'done':
-            addCard(task, columns[2]);
-            break;
-    }
-}
 
 //if form valid then creates new Task object from input fields value, push it on the vurrentTasks array, and append it to the DOM then hide the form
 btnAddForm.addEventListener('click', (e) => {
     e.preventDefault();
     if (validateForm()) {
+
+        //get values from form
         let taskText = document.forms["newTaskForm"]["taskText"].value;
         document.forms["newTaskForm"]["taskText"].value = '';
         let taskState = document.forms["newTaskForm"]["state"].value;
@@ -213,14 +161,17 @@ btnAddForm.addEventListener('click', (e) => {
         let taskPrio = document.forms["newTaskForm"]["priority"].value;
         document.forms["newTaskForm"]["priority"].value = 'low';
         let taskDeadline = document.forms["newTaskForm"]["deadline"].value;
-        document.forms["newTaskForm"]["deadline"].value = '2023-07-22';
-        taskIDCount++;
-        let newTaskID = 'task-#' + taskIDCount;
-        let newTask = new Task(taskText, taskState, newTaskID, taskPrio, taskDeadline);
-        currentTasks.push(newTask);
-        appendTaskToDom(newTask);
-        document.getElementById("myForm").style.display = "none";
+        document.forms["newTaskForm"]["deadline"].value = getDate();
+
+        //refress the allTabs variable and save the projectname of the newTask
+        allTabs = document.querySelectorAll('.tablinks');
+        let activeTask = getActiveTab(allTabs);
+        let taskProjectName = activeTask.textContent;
+
+        //create newTask and save it to the allTasks variable
+        let newTask = new Task(taskProjectName, taskText, taskState, taskPrio, taskDeadline);
+        allTasks.push(newTask);
+        appendTaskToDom(newTask, addCard);                          //append the newTask as an element to the DOM
+        document.getElementById("myForm").style.display = "none";   //hide the form
     }
 })
-
-
