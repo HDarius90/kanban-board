@@ -1,0 +1,15 @@
+{
+  "name": "kanban-board",
+  "version": "1.0.0",
+  "description": "kanban board application\r Hozz létre egy kanban board alkalmazást TypeScript használatával. Az alkalmazásnak lehetővé kell tennie a felhasználók számára, hogy a feladatokat különböző oszlopokba rendezzék, amelyek különböző taszk életciklus szakaszokat képviselnek, például \"To Do\", \"In Progress\" és \"Done\".",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongoose": "^7.3.1"
+  }
+}
