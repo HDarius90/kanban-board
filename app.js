@@ -175,3 +175,5 @@ btnAddForm.addEventListener('click', (e) => {
         document.getElementById("myForm").style.display = "none";   //hide the form
     }
 })
+
+console.log(allTasks);
