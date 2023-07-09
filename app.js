@@ -15,12 +15,12 @@ import {
     openProject, AddNewProjectTab, AddNewTabContent, getDate
 } from "./functions.js"
 
-//init mongoose
-const mongoose = require('mongoose');
+//init mongoose and define task schema
+import mongoose from 'mongoose';
 
 mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard');
 const taskSchema = new mongoose.Schema({
-    projectName : {
+    projectName: {
         type: String,
         required: true,
     },
@@ -45,10 +45,21 @@ const taskSchema = new mongoose.Schema({
     }
 })
 
+//creating task collection in mongoDB
 const Task = mongoose.model('Task', taskSchema);
 
-//try to parse allProject from local storage and if it does not exist then create empty array
-let allTasks = JSON.parse(localStorage.getItem('allTasks') || "[]");
+//try to load tasks from MongoDB
+const loadTasksFromDB = async () => {
+    try {
+        const tasks = await Task.find();
+        return tasks;
+    } catch (error) {
+        console.log(error);   
+    }
+}
+
+const allTasks = loadTasksFromDB()
+console.log(allTasks);
 
 //Rendering the projectTabs and TabContents from allTasks variable
 let allProjectNames = [];
