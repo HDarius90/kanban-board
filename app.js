@@ -15,17 +15,37 @@ import {
     openProject, AddNewProjectTab, AddNewTabContent, getDate
 } from "./functions.js"
 
+//init mongoose
+const mongoose = require('mongoose');
 
-class Task {
-    constructor(projectName, text, state, priority = 'low', deadline) {
-        this.projectName = projectName;
-        this.text = text;
-        this.state = state;
-        this.id = getRandomID();
-        this.priority = priority;
-        this.deadline = deadline
+mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard');
+const taskSchema = new mongoose.Schema({
+    projectName : {
+        type: String,
+        required: true,
+    },
+    text: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    state: {
+        type: String,
+        required: true,
+        enum: ["todo", "inprogress", "done"]
+    },
+    priority: {
+        type: String,
+        enum: ["low", "medium", "high"],
+        default: "low"
+    },
+    deadline: {
+        type: Date,
+        deafult: getDate()
     }
-}
+})
+
+const Task = mongoose.model('Task', taskSchema);
 
 //try to parse allProject from local storage and if it does not exist then create empty array
 let allTasks = JSON.parse(localStorage.getItem('allTasks') || "[]");
