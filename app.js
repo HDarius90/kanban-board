@@ -7,12 +7,13 @@ const btnCancelForm = document.querySelector('button.cancel')
 const btnAddForm = document.querySelector('button.add')
 let allTabs = document.querySelectorAll('.tablinks');
 let addProject = document.querySelector('#add-content');
+const getDate = require("./getDate.js");
 
 
 
 import {
-    dragOver, mooveCardToNewStateWithButton, getActiveTab, getRandomID, validateForm, addCard, appendTaskToDom, isHidden,
-    openProject, AddNewProjectTab, AddNewTabContent, getDate
+    dragOver, mooveCardToNewStateWithButton, getActiveTab, validateForm, addCard, appendTaskToDom, isHidden,
+    openProject, AddNewProjectTab, AddNewTabContent
 } from "./functions.js"
 
 //init mongoose and define task schema
