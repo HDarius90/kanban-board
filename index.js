@@ -20,11 +20,11 @@ mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard')
 
 app.get('/tasks', async (req, res) => {
     const tasks = await Task.find({})
-    res.render('projects/index', { tasks })
+    res.render('index', { tasks })
 })
 app.get('/boards', async (req, res) => {
     const tasks = await Task.find({})
-    res.render('projects/boards', { tasks })
+    res.render('boards', { tasks })
 })
 
 app.get('/boards/:projName/:taskID', (req, res) => {

@@ -1,0 +1,12 @@
+<%- include('partials/head') %>
+    <h1>All Tasks</h1>
+    <ul>
+        <% for (let task of tasks) { %>
+            <li>
+                <%= task.text %>
+            </li>
+            <% } %>
+
+    </ul>
+
+    <%- include('partials/footer') %>
