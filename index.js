@@ -21,6 +21,16 @@ app.get('/tasks', async (req, res) => {
     const tasks = await Task.find({})
     res.render('projects/index', { tasks })
 })
+app.get('/boards', async (req, res) => {
+    const tasks = await Task.find({})
+    res.render('projects/boards', { tasks })
+})
+
+app.get('/boards/:project', (req, res) => {
+    const projName = req.params.project;
+    console.log(req.params);
+    res.send(`<h1>This is the ${projName} board</h1>`)
+})
 
 app.listen(3000, () => {
     console.log("LISSENING ON PORT 3000");
