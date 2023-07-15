@@ -26,10 +26,9 @@ app.get('/boards', async (req, res) => {
     res.render('projects/boards', { tasks })
 })
 
-app.get('/boards/:project', (req, res) => {
-    const projName = req.params.project;
-    console.log(req.params);
-    res.send(`<h1>This is the ${projName} board</h1>`)
+app.get('/boards/:projName/:taskID', (req, res) => {
+    const { projName, taskID }  = req.params;
+    res.send(`<h1>This is the ${projName} board and ${taskID}</h1>`)
 })
 
 app.listen(3000, () => {
