@@ -4,6 +4,10 @@ const path = require('path');
 const mongoose = require('mongoose');
 const Task = require('./models/task.js');
 
+app.use(express.static(path.join(__dirname, 'public')))
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs')
+
 mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard')
     .then(() => {
         console.log("MONGOOSE CONNECTION OPEN!")
@@ -13,9 +17,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard')
         console.log(err);
     })
 
-
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs')
 
 app.get('/tasks', async (req, res) => {
     const tasks = await Task.find({})
@@ -27,7 +28,7 @@ app.get('/boards', async (req, res) => {
 })
 
 app.get('/boards/:projName/:taskID', (req, res) => {
-    const { projName, taskID }  = req.params;
+    const { projName, taskID } = req.params;
     res.send(`<h1>This is the ${projName} board and ${taskID}</h1>`)
 })
 
