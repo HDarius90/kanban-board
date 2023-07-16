@@ -24,12 +24,18 @@ app.get('/tasks', async (req, res) => {
 })
 app.get('/boards', async (req, res) => {
     const tasks = await Task.find({})
-    res.render('boards', { tasks })
+    const allProjectsName = []; 
+    for (let task of tasks) {   //populate allProjectsName array with the name of the tasks project name
+        if (!allProjectsName.includes(task.projectName)) {
+            allProjectsName.push(task.projectName)
+        }
+    }
+    res.render('boards', { tasks, allProjectsName })
 })
 
-app.get('/boards/:projName/:taskID', (req, res) => {
-    const { projName, taskID } = req.params;
-    res.send(`<h1>This is the ${projName} board and ${taskID}</h1>`)
+app.get('/p/:projectName', (req, res) => {
+    const { projectName } = req.params;
+    res.send(`<h1>This is the ${projectName}</h1>`)
 })
 
 app.listen(3000, () => {

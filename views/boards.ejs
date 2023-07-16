@@ -1,17 +1,11 @@
 <%- include('partials/head') %>
+    <%- include('partials/navbar') %>
 
-    <h1>All Projects</h1>
-    <ul>
-        <% let allProject=[] %>
-            <% for (let task of tasks) { %>
-                <% if(!allProject.includes(task.projectName)){ %>
-                    <li>
-                        <%= task.projectName %>
-                    </li>
-                    <% allProject.push(task.projectName) %>
-                        <% } %>
-                            <% } %>
+        <h1>All Projects</h1>
+        <ul>
+            <% for (let projectName of allProjectsName) { %>
+                <li><%= projectName %></li>
+                <% } %>
+        </ul>
 
-    </ul>
-
-    <%- include('partials/footer') %>
+        <%- include('partials/footer') %>
