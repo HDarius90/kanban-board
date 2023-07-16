@@ -1,11 +1,14 @@
 <%- include('partials/head') %>
-    <%- include('partials/navbar') %>
+    <% const allProjectsName=getAllProjectName(tasks) %>
+        <%- include('partials/navbar') %>
 
-        <h1>All Projects</h1>
-        <ul>
-            <% for (let projectName of allProjectsName) { %>
-                <li><%= projectName %></li>
-                <% } %>
-        </ul>
+            <h1>All Projects</h1>
+            <ul>
+                <% for (let projectName of allProjectsName) { %>
+                    <li>
+                        <%= projectName %>
+                    </li>
+                    <% } %>
+            </ul>
 
-        <%- include('partials/footer') %>
+            <%- include('partials/footer') %>

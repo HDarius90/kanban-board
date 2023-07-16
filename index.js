@@ -24,20 +24,27 @@ app.get('/tasks', async (req, res) => {
 })
 app.get('/boards', async (req, res) => {
     const tasks = await Task.find({})
-    const allProjectsName = []; 
-    for (let task of tasks) {   //populate allProjectsName array with the name of the tasks project name
+    res.render('boards', { tasks })
+})
+
+app.get('/p/:reqestedProjName', async (req, res) => {
+    const { reqestedProjName } = req.params;
+    const tasks = await Task.find({})
+    let selectedProjTasks = []
+    const allProjectsName = [];
+
+    for (let task of tasks) {   //populate selectedProjTasks array with tasks whitch has a matching projectName 
         if (!allProjectsName.includes(task.projectName)) {
             allProjectsName.push(task.projectName)
         }
+        if (task.projectName.replace(/\s+/g, '').toLowerCase() === reqestedProjName) {
+            selectedProjTasks.push(task)
+        }
     }
-    res.render('boards', { tasks, allProjectsName })
-})
-
-app.get('/p/:projectName', (req, res) => {
-    const { projectName } = req.params;
-    res.send(`<h1>This is the ${projectName}</h1>`)
+    res.render('project', { selectedProjTasks, allProjectsName })
 })
 
 app.listen(3000, () => {
     console.log("LISSENING ON PORT 3000");
 })
+

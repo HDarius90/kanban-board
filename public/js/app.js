@@ -13,55 +13,15 @@ const getDate = require("./getDate.js");
 
 import {
     dragOver, mooveCardToNewStateWithButton, getActiveTab, validateForm, addCard, appendTaskToDom, isHidden,
-    openProject, AddNewProjectTab, AddNewTabContent
-} from "./functions.js"
+    openProject, AddNewProjectTab, AddNewTabContent, getAllProjectName
+} from "./public/js/functions.js"
 
-//init mongoose and define task schema
-import mongoose from 'mongoose';
 
-mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard');
-const taskSchema = new mongoose.Schema({
-    projectName: {
-        type: String,
-        required: true,
-    },
-    text: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    state: {
-        type: String,
-        required: true,
-        enum: ["todo", "inprogress", "done"]
-    },
-    priority: {
-        type: String,
-        enum: ["low", "medium", "high"],
-        default: "low"
-    },
-    deadline: {
-        type: Date,
-        deafult: getDate()
-    }
-})
 
-//creating task collection in mongoDB
-const Task = mongoose.model('Task', taskSchema);
 
-//try to load tasks from MongoDB
-const loadTasksFromDB = async () => {
-    try {
-        const tasks = await Task.find();
-        return tasks;
-    } catch (error) {
-        console.log(error);   
-    }
-}
 
-const allTasks = loadTasksFromDB()
-console.log(allTasks);
 
+/* 
 //Rendering the projectTabs and TabContents from allTasks variable
 let allProjectNames = [];
 
@@ -207,5 +167,4 @@ btnAddForm.addEventListener('click', (e) => {
         document.getElementById("myForm").style.display = "none";   //hide the form
     }
 })
-
-console.log(allTasks);
+ */

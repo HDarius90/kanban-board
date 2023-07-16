@@ -1,7 +1,9 @@
 <%- include('partials/head') %>
+    <%- include('partials/navbar') %>
+
     <h1>All Tasks</h1>
     <ul>
-        <% for (let task of tasks) { %>
+        <% for (let task of selectedProjTasks) { %>
             <li>
                 <%= task.text %>
             </li>
