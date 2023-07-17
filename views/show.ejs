@@ -1,0 +1,17 @@
+<%- include('partials/head') %>
+    <%- include('partials/navbar') %>
+
+        <h1>All Tasks</h1>
+        <ul>
+            <% for (let task of filteredTasks) { %>
+                <li>
+                    <%= task.text %>
+                </li>
+                <% } %>
+
+        </ul>
+
+        <a class="btn btn-primary" role="button" aria-disabled="true" href="/boards/newtask">Add New Task</a>
+
+
+        <%- include('partials/footer') %>

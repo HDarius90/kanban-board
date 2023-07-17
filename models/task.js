@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
-const getDate = require("../getDate.js");
 
 const taskSchema = new mongoose.Schema({
-    projectName: {
+    boardName: {
         type: String,
         required: true,
     },
@@ -26,7 +25,15 @@ const taskSchema = new mongoose.Schema({
     deadline: {
         type: Date,
         required: true,
-        min: new Date()
+        validate: {
+            validator: function (value) {
+              // `value` is the value of the `deadline` property
+      
+              // Check if the deadline is a valid Date and not in the past
+              return value instanceof Date && value >= new Date();
+            },
+            message: 'Deadline must be a valid date and cannot be in the past.',
+          },
     }
 })
 

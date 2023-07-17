@@ -1,4 +1,4 @@
-import { addEventListeners } from "../../cardevents.js"
+import { addEventListeners } from "./cardevents.js"
 
 // Call a reduce function which will loop through the list of draggable elements and also specify the single element after the mouse cursor.
 // Return the reduce function by adding the first element as closest and the second as a child. Also, equate the offset and add conditions.
@@ -236,12 +236,6 @@ export function dragOver(column) {
     })
 }
 
-module.export = function getAllProjectName (tasks) {
-    const allProjectsName = [];
-    for (let task of tasks) {   //populate allProjectsName array with the name of the tasks project name
-        if (!allProjectsName.includes(task.projectName)) {
-            allProjectsName.push(task.projectName)
-        }
-    }
-    return allProjectsName;
-}
+
+
+  

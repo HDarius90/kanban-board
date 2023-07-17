@@ -1,0 +1,76 @@
+<%- include('partials/head') %>
+  <%- include('partials/navbar') %>
+
+    <form action="/boards" method="post">
+      <div class="form-group row">
+        <label for="task-text" class="col-sm-2 col-form-label">Text</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="task-text" placeholder="Enter New Task" name="taskText" required>
+        </div>
+      </div>
+      <fieldset class="form-group">
+        <div class="row">
+          <legend class="col-form-label col-sm-2 pt-0">Status</legend>
+          <div class="col-sm-10">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="state" id="todo" value="todo" checked>
+              <label class="form-check-label" for="todo">
+                To Do
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="state" id="inprogress" value="inprogress">
+              <label class="form-check-label" for="inprogress">
+                In Progress
+              </label>
+            </div>
+            <div class="form-check disabled">
+              <input class="form-check-input" type="radio" name="state" id="done" value="done">
+              <label class="form-check-label" for="done">
+                Done
+              </label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="form-group">
+        <div class="row">
+          <legend class="col-form-label col-sm-2 pt-0">Priority</legend>
+          <div class="col-sm-10">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="priority" id="prio-1" value="low" checked>
+              <label class="form-check-label" for="prio-1">
+                Low
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="priority" id="prio-2" value="medium">
+              <label class="form-check-label" for="prio-2">
+                Medium
+              </label>
+            </div>
+            <div class="form-check disabled">
+              <input class="form-check-input" type="radio" name="priority" id="prio-3" value="high">
+              <label class="form-check-label" for="prio-3">
+                High
+              </label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <div class="container mt-5">
+        <form>
+          <div class="form-group">
+            <span class="form-check-title"><b>Deadline</b></span> <br>
+            <div class="mb-1">
+              <input type="date" class="form-control" id="deadline" name="deadline" value="2023-07-22" min="2023-06-26"
+                max="2024-12-31">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Add new task</button>
+        </form>
+      </div>
+    </form>
+
+
+    <%- include('partials/footer') %>

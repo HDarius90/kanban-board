@@ -2,8 +2,12 @@ const express = require("express");
 const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
-const Task = require('./models/task.js');
+const Task = require('./models/task');
 const bodyParser = require('body-parser');
+const { filterTasksByBoardName, getAllBoards } = require('./utils'); // 
+
+
+
 
 
 app.use(express.static(path.join(__dirname, 'public')))
@@ -20,44 +24,33 @@ mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard')
         console.log(err);
     })
 
-
-app.get('/tasks', async (req, res) => {
-    const tasks = await Task.find({})
-    res.render('index', { tasks })
-})
-
-app.get('/project/new', (req, res) =>{
-    res.render('new');
-})
-
-app.post('/project', (req, res) =>{
-    const newTask = req.body;
-    console.log(newTask);
-})
-
-
 app.get('/boards', async (req, res) => {
     const tasks = await Task.find({})
-    res.render('boards', { tasks })
+    const allBoardsName = getAllBoards(tasks);
+    res.render('boards', { tasks, allBoardsName })
 })
 
-app.get('/p/:reqestedProjName', async (req, res) => {
-    const { reqestedProjName } = req.params;
+app.get('/b/:reqestedBoardName', async (req, res) => {
+    const { reqestedBoardName } = req.params;
     const tasks = await Task.find({})
-    let selectedProjTasks = []
-    const allProjectsName = [];
-
-    for (let task of tasks) {   //populate selectedProjTasks array with tasks whitch has a matching projectName 
-        if (!allProjectsName.includes(task.projectName)) {
-            allProjectsName.push(task.projectName)
-        }
-        if (task.projectName.replace(/\s+/g, '').toLowerCase() === reqestedProjName) {
-            selectedProjTasks.push(task)
-        }
-    }
-    res.render('project', { selectedProjTasks, allProjectsName })
+    const filteredTasks = filterTasksByBoardName(tasks, reqestedBoardName)
+    const allBoardsName = getAllBoards(tasks);
+    res.render('show', { filteredTasks, allBoardsName })
 })
 
+app.get('/boards/newtask', async (req, res) => {
+    const tasks = await Task.find({})
+    const allBoardsName = getAllBoards(tasks);
+    res.render('newtask', { allBoardsName });
+})
+
+app.post('/boards', async (req, res) => {
+    const newTask = new Task(req.body);
+    await newTask.save();
+    const tasks = await Task.find({})
+    const allBoardsName = getAllBoards(tasks);
+    res.render('boards', { tasks, allBoardsName })
+})
 app.listen(3000, () => {
     console.log("LISSENING ON PORT 3000");
 })

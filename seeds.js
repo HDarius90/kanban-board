@@ -13,35 +13,35 @@ mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard')
 
     const seedTasks = [
         {
-            projectName: 'Project 1',
+            boardName: 'Project 1',
             text: "Go to sleep",
             state: 'todo',
             priority: "low",
             deadline: "2023-08-14"
         },
         {
-            projectName: 'Project 2',
+            boardName: 'Project 2',
             text: "Go to bed",
             state: 'done',
             priority: "medium",
             deadline: "2023-08-14"
         },
         {
-            projectName: 'Project 1',
+            boardName: 'Project 1',
             text: "Go to school",
             state: 'inprogress',
             priority: "high",
             deadline: "2023-08-14"
         },
         {
-            projectName: 'Project 2',
+            boardName: 'Project 2',
             text: "Eat",
             state: 'done',
             priority: "medium",
             deadline: "2023-08-14"
         },
         {
-            projectName: 'Project 1',
+            boardName: 'Project 1',
             text: "Test",
             state: 'done',
             priority: "medium",

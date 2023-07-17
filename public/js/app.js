@@ -14,7 +14,7 @@ const getDate = require("../../getDate.js");
 import {
     dragOver, mooveCardToNewStateWithButton, getActiveTab, validateForm, addCard, appendTaskToDom, isHidden,
     openProject, AddNewProjectTab, AddNewTabContent, getAllProjectName
-} from "./functions.js"
+} from "../../functions.js"
 
 
 
