@@ -3,8 +3,11 @@ const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
 const Task = require('./models/task.js');
+const bodyParser = require('body-parser');
+
 
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(bodyParser.urlencoded({ extended: false }))
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs')
 
@@ -22,6 +25,17 @@ app.get('/tasks', async (req, res) => {
     const tasks = await Task.find({})
     res.render('index', { tasks })
 })
+
+app.get('/project/new', (req, res) =>{
+    res.render('new');
+})
+
+app.post('/project', (req, res) =>{
+    const newTask = req.body;
+    console.log(newTask);
+})
+
+
 app.get('/boards', async (req, res) => {
     const tasks = await Task.find({})
     res.render('boards', { tasks })

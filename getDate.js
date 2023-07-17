@@ -6,4 +6,4 @@ function getDate (days) {
     return currentDate.toJSON().slice(0, 10); // "2023-06-29"
 }
 
-module.export = getDate();
+module.export = getDate;
