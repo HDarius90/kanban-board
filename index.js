@@ -39,6 +39,8 @@ app.get('/b/:reqestedBoardName', async (req, res) => {
 })
 
 app.get('/boards/newtask', async (req, res) => {
+    const boardName = req.query.board;
+    console.log(boardName);
     const tasks = await Task.find({})
     const allBoardsName = getAllBoards(tasks);
     res.render('newtask', { allBoardsName });
