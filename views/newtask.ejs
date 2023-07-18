@@ -1,11 +1,11 @@
 <%- include('partials/head') %>
   <%- include('partials/navbar') %>
 
-    <form action="/boards" method="post">
+    <form action="/boards?board=<%= encodeURIComponent(boardName) %>" method="post">
       <div class="form-group row">
         <label for="task-text" class="col-sm-2 col-form-label">Text</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="task-text" placeholder="Enter New Task" name="taskText" required>
+          <input type="text" class="form-control" id="task-text" placeholder="Enter New Task" name="text" required>
         </div>
       </div>
       <fieldset class="form-group">

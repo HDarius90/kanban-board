@@ -40,19 +40,23 @@ app.get('/b/:reqestedBoardName', async (req, res) => {
 
 app.get('/boards/newtask', async (req, res) => {
     const boardName = req.query.board;
-    console.log(boardName);
     const tasks = await Task.find({})
     const allBoardsName = getAllBoards(tasks);
-    res.render('newtask', { allBoardsName });
+    res.render('newtask', { allBoardsName, boardName });
 })
 
 app.post('/boards', async (req, res) => {
+    const boardName = req.query.board;
+    console.log(req.body);
     const newTask = new Task(req.body);
+    newTask.boardName = boardName;
     await newTask.save();
     const tasks = await Task.find({})
+    const filteredTasks = filterTasksByBoardName(tasks, boardName)
     const allBoardsName = getAllBoards(tasks);
-    res.render('boards', { tasks, allBoardsName })
+    res.render('show', { filteredTasks, allBoardsName })
 })
+
 app.listen(3000, () => {
     console.log("LISSENING ON PORT 3000");
 })
