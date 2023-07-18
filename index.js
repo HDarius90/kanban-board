@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const path = require('path');
+const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const Task = require('./models/task');
 const bodyParser = require('body-parser');
@@ -12,6 +13,7 @@ const { filterTasksByBoardName, getAllBoards, convertISODateToYYYYMMDD } = requi
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(methodOverride('_method'))
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs')
 
@@ -87,6 +89,34 @@ app.get('/boards/task/:id/edit', async (req, res) => {
     const allBoardsName = getAllBoards(tasks);
     res.render('tasks/edit', { task, allBoardsName, convertISODateToYYYYMMDD })
 })
+
+app.put('/boards/task/:id', async (req, res) => {
+    const { id } = req.params;
+    const { text, state, priority, deadline } = req.body;
+    const task = await Task.findById(id);
+    console.log(task);
+    task.text = text;
+    task.state = state;
+    task.priority = priority;
+    task.deadline = deadline;
+    console.log(task);
+    await task.save();
+    const tasks = await Task.find({})
+    const allBoardsName = getAllBoards(tasks);
+    res.render('tasks/show', { task, allBoardsName })
+})
+
+app.delete('/boards/task/:id', async (req, res) => {
+    const { id } = req.params;
+    const boardName = req.query.board;
+    await Task.deleteOne({ _id: id });
+    const tasks = await Task.find({})
+    const filteredTasks = filterTasksByBoardName(tasks, boardName)
+    const allBoardsName = getAllBoards(tasks);
+    res.render('boards/show', { filteredTasks, allBoardsName })
+})
+
+
 
 app.listen(3000, () => {
     console.log("LISSENING ON PORT 3000");
