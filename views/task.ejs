@@ -1,0 +1,16 @@
+<%- include('partials/head') %>
+    <%- include('partials/navbar') %>
+
+
+    <b>Task name: </b><%= task.text %><br>
+    <b>Task state: </b><%= task.state %><br>
+    <b>Task priority: </b><%= task.priority %><br>
+    <b>Task deadline: </b><%= task.deadline %><br>
+
+
+    <a href="/b/<%= task.boardName.replace(/\s+/g, '').toLowerCase() %>">Back</a>
+
+
+
+
+    <%- include('partials/footer') %>

@@ -47,7 +47,6 @@ app.get('/boards/newtask', async (req, res) => {
 
 app.post('/boards', async (req, res) => {
     const boardName = req.query.board;
-    console.log(req.body);
     const newTask = new Task(req.body);
     newTask.boardName = boardName;
     await newTask.save();
@@ -55,6 +54,30 @@ app.post('/boards', async (req, res) => {
     const filteredTasks = filterTasksByBoardName(tasks, boardName)
     const allBoardsName = getAllBoards(tasks);
     res.render('show', { filteredTasks, allBoardsName })
+})
+
+app.get('/boards/newboard', async (req, res) => {
+    const tasks = await Task.find({})
+    const allBoardsName = getAllBoards(tasks);
+    res.render('newboard', { allBoardsName });
+})
+
+app.post('/boards/newboard', async (req, res) => {
+    const newTask = new Task(req.body);
+    const boardName = newTask.boardName;
+    await newTask.save();
+    const tasks = await Task.find({})
+    const filteredTasks = filterTasksByBoardName(tasks, boardName)
+    const allBoardsName = getAllBoards(tasks);
+    res.render('show', { filteredTasks, allBoardsName })
+})
+
+app.get('/task/:id', async (req, res) => {
+    const { id } = req.params;
+    const task = await Task.findById(id);
+    const tasks = await Task.find({})
+    const allBoardsName = getAllBoards(tasks);
+    res.render('task', { task, allBoardsName })
 })
 
 app.listen(3000, () => {

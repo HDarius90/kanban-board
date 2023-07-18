@@ -2,16 +2,20 @@
     <%- include('partials/navbar') %>
 
         <h1>All Tasks</h1>
-        <ul>
+        <ol>
             <% for (let task of filteredTasks) { %>
                 <li>
-                    <%= task.text %>
+                    <a href="/task/<%= task._id %>">
+                        <%= task.text %>
+                    </a>
+
                 </li>
                 <% } %>
 
-        </ul>
+        </ol>
 
-        <a class="btn btn-primary" role="button" aria-disabled="true" href="/boards/newtask?board=<%= encodeURIComponent(filteredTasks[0].boardName) %>">>Add New Task</a>
+        <a class="btn btn-primary" role="button" aria-disabled="true"
+            href="/boards/newtask?board=<%= encodeURIComponent(filteredTasks[0].boardName) %>">Add New Task</a>
 
 
         <%- include('partials/footer') %>
