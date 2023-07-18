@@ -4,7 +4,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const Task = require('./models/task');
 const bodyParser = require('body-parser');
-const { filterTasksByBoardName, getAllBoards } = require('./utils'); // 
+const { filterTasksByBoardName, getAllBoards, convertISODateToYYYYMMDD } = require('./utils'); // 
 
 
 
@@ -78,6 +78,14 @@ app.get('/boards/task/:id', async (req, res) => {
     const tasks = await Task.find({})
     const allBoardsName = getAllBoards(tasks);
     res.render('tasks/show', { task, allBoardsName })
+})
+
+app.get('/boards/task/:id/edit', async (req, res) => {
+    const { id } = req.params;
+    const task = await Task.findById(id);
+    const tasks = await Task.find({})
+    const allBoardsName = getAllBoards(tasks);
+    res.render('tasks/edit', { task, allBoardsName, convertISODateToYYYYMMDD })
 })
 
 app.listen(3000, () => {
