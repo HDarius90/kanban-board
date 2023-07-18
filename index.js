@@ -30,7 +30,7 @@ app.get('/boards', async (req, res) => {
     res.render('boards', { tasks, allBoardsName })
 })
 
-app.get('/b/:reqestedBoardName', async (req, res) => {
+app.get('/boards/b/:reqestedBoardName', async (req, res) => {
     const { reqestedBoardName } = req.params;
     const tasks = await Task.find({})
     const filteredTasks = filterTasksByBoardName(tasks, reqestedBoardName)
@@ -45,7 +45,7 @@ app.get('/boards/newtask', async (req, res) => {
     res.render('newtask', { allBoardsName, boardName });
 })
 
-app.post('/boards', async (req, res) => {
+app.post('/boards/newtask', async (req, res) => {
     const boardName = req.query.board;
     const newTask = new Task(req.body);
     newTask.boardName = boardName;
@@ -72,7 +72,7 @@ app.post('/boards/newboard', async (req, res) => {
     res.render('show', { filteredTasks, allBoardsName })
 })
 
-app.get('/task/:id', async (req, res) => {
+app.get('/boards/task/:id', async (req, res) => {
     const { id } = req.params;
     const task = await Task.findById(id);
     const tasks = await Task.find({})
