@@ -27,7 +27,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard')
 app.get('/boards', async (req, res) => {
     const tasks = await Task.find({})
     const allBoardsName = getAllBoards(tasks);
-    res.render('boards', { tasks, allBoardsName })
+    res.render('boards/index', { tasks, allBoardsName })
 })
 
 app.get('/boards/b/:reqestedBoardName', async (req, res) => {
@@ -35,14 +35,14 @@ app.get('/boards/b/:reqestedBoardName', async (req, res) => {
     const tasks = await Task.find({})
     const filteredTasks = filterTasksByBoardName(tasks, reqestedBoardName)
     const allBoardsName = getAllBoards(tasks);
-    res.render('show', { filteredTasks, allBoardsName })
+    res.render('boards/show', { filteredTasks, allBoardsName })
 })
 
 app.get('/boards/newtask', async (req, res) => {
     const boardName = req.query.board;
     const tasks = await Task.find({})
     const allBoardsName = getAllBoards(tasks);
-    res.render('newtask', { allBoardsName, boardName });
+    res.render('tasks/new', { allBoardsName, boardName });
 })
 
 app.post('/boards/newtask', async (req, res) => {
@@ -53,13 +53,13 @@ app.post('/boards/newtask', async (req, res) => {
     const tasks = await Task.find({})
     const filteredTasks = filterTasksByBoardName(tasks, boardName)
     const allBoardsName = getAllBoards(tasks);
-    res.render('show', { filteredTasks, allBoardsName })
+    res.render('tasks/show', { filteredTasks, allBoardsName })
 })
 
 app.get('/boards/newboard', async (req, res) => {
     const tasks = await Task.find({})
     const allBoardsName = getAllBoards(tasks);
-    res.render('newboard', { allBoardsName });
+    res.render('boards/new', { allBoardsName });
 })
 
 app.post('/boards/newboard', async (req, res) => {
@@ -69,7 +69,7 @@ app.post('/boards/newboard', async (req, res) => {
     const tasks = await Task.find({})
     const filteredTasks = filterTasksByBoardName(tasks, boardName)
     const allBoardsName = getAllBoards(tasks);
-    res.render('show', { filteredTasks, allBoardsName })
+    res.render('boards/show', { filteredTasks, allBoardsName })
 })
 
 app.get('/boards/task/:id', async (req, res) => {
@@ -77,7 +77,7 @@ app.get('/boards/task/:id', async (req, res) => {
     const task = await Task.findById(id);
     const tasks = await Task.find({})
     const allBoardsName = getAllBoards(tasks);
-    res.render('task', { task, allBoardsName })
+    res.render('tasks/show', { task, allBoardsName })
 })
 
 app.listen(3000, () => {
