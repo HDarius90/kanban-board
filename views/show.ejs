@@ -11,7 +11,7 @@
 
         </ul>
 
-        <a class="btn btn-primary" role="button" aria-disabled="true" href=<%= `/boards/newtask?board=${filteredTasks[0].boardName}` %>>Add New Task</a>
+        <a class="btn btn-primary" role="button" aria-disabled="true" href="/boards/newtask?board=<%= encodeURIComponent(filteredTasks[0].boardName) %>">>Add New Task</a>
 
 
         <%- include('partials/footer') %>
