@@ -5,7 +5,7 @@ const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const Task = require('./models/task');
 const bodyParser = require('body-parser');
-const { filterTasksByBoardName, getAllBoards, convertISODateToYYYYMMDD } = require('./utils'); // 
+const { getAllBoards, convertISODateToYYYYMMDD } = require('./utils'); // 
 
 
 
@@ -26,16 +26,16 @@ mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard')
         console.log(err);
     })
 
-app.get('/boards', async (req, res) => {
+app.get('/index', async (req, res) => {
     const tasks = await Task.find({})
     const allBoardsName = getAllBoards(tasks);
     res.render('boards/index', { tasks, allBoardsName })
 })
 
-app.get('/boards/b/:reqestedBoardName', async (req, res) => {
-    const { reqestedBoardName } = req.params;
+app.get('/boards', async (req, res) => {
+    const { boardName } = req.query;
     const tasks = await Task.find({})
-    const filteredTasks = filterTasksByBoardName(tasks, reqestedBoardName)
+    const filteredTasks = await Task.find({ boardName })
     const allBoardsName = getAllBoards(tasks);
     res.render('boards/show', { filteredTasks, allBoardsName })
 })
@@ -53,7 +53,7 @@ app.post('/boards/newtask', async (req, res) => {
     newTask.boardName = boardName;
     await newTask.save();
     const tasks = await Task.find({})
-    const filteredTasks = filterTasksByBoardName(tasks, boardName)
+    const filteredTasks = await Task.find({ boardName })
     const allBoardsName = getAllBoards(tasks);
     res.render('boards/show', { filteredTasks, allBoardsName })
 })
@@ -69,7 +69,7 @@ app.post('/boards/newboard', async (req, res) => {
     const boardName = newTask.boardName;
     await newTask.save();
     const tasks = await Task.find({})
-    const filteredTasks = filterTasksByBoardName(tasks, boardName)
+    const filteredTasks = await Task.find({ boardName })
     const allBoardsName = getAllBoards(tasks);
     res.render('boards/show', { filteredTasks, allBoardsName })
 })
@@ -92,7 +92,7 @@ app.get('/boards/task/:id/edit', async (req, res) => {
 
 app.put('/boards/task/:id', async (req, res) => {
     const { id } = req.params;
-    const task = await Task.findByIdAndUpdate(id, req.body, {runValidators: true, new: true });
+    const task = await Task.findByIdAndUpdate(id, req.body, { runValidators: true, new: true });
     const tasks = await Task.find({})
     const allBoardsName = getAllBoards(tasks);
     res.render('tasks/show', { task, allBoardsName })
@@ -103,7 +103,7 @@ app.delete('/boards/task/:id', async (req, res) => {
     const boardName = req.query.board;
     await Task.findByIdAndDelete(id);
     const tasks = await Task.find({})
-    const filteredTasks = filterTasksByBoardName(tasks, boardName)
+    const filteredTasks = await Task.find({ boardName })
     const allBoardsName = getAllBoards(tasks);
     res.render('boards/show', { filteredTasks, allBoardsName })
 })

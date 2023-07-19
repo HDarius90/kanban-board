@@ -8,7 +8,7 @@
     <b>Task deadline: </b><%= task.deadline %><br>
 
 
-    <a href="/boards/b/<%= task.boardName.replace(/\s+/g, '').toLowerCase() %>">Back</a>
+    <a href="/boards?boardName=<%= task.boardName %>">Back</a>
     <a href="/boards/task/<%= task._id %>/edit">Edit</a>
     <form action="/boards/task/<%= task._id %>?board=<%= task.boardName %>&_method=DELETE" method="post">
         <button type="submit" class="btn btn-danger">Delete</button>

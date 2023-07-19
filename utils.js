@@ -1,16 +1,4 @@
-module.exports = {
-    filterTasksByBoardName: function (tasks, requestedBoardName) {
-      const selectedBoardTasks = [];
-  
-      for (let task of tasks) {
-        if (task.boardName.replace(/\s+/g, '').toLowerCase() === requestedBoardName.replace(/\s+/g, '').toLowerCase()) {
-          selectedBoardTasks.push(task);
-        }
-      }
-  
-      return selectedBoardTasks;
-    },
-  
+module.exports = { 
     getAllBoards: function (tasks) {
       const allBoardsName = [];
   
