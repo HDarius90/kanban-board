@@ -75,33 +75,29 @@ app.post('/boards/newboard', async (req, res) => {
 })
 
 app.get('/boards/task/:id', async (req, res) => {
-    const { id } = req.params;
-    const task = await Task.findById(id);
+    const task = await Task.findById(req.params.id);
     const tasks = await Task.find({})
     const allBoardsName = getAllBoards(tasks);
     res.render('tasks/show', { task, allBoardsName })
 })
 
 app.get('/boards/task/:id/edit', async (req, res) => {
-    const { id } = req.params;
-    const task = await Task.findById(id);
+    const task = await Task.findById(req.params.id);
     const tasks = await Task.find({})
     const allBoardsName = getAllBoards(tasks);
     res.render('tasks/edit', { task, allBoardsName, convertISODateToYYYYMMDD })
 })
 
 app.put('/boards/task/:id', async (req, res) => {
-    const { id } = req.params;
-    const task = await Task.findByIdAndUpdate(id, req.body, { runValidators: true, new: true });
+    const task = await Task.findByIdAndUpdate(req.params.id, req.body, { runValidators: true, new: true });
     const tasks = await Task.find({})
     const allBoardsName = getAllBoards(tasks);
     res.render('tasks/show', { task, allBoardsName })
 })
 
 app.delete('/boards/task/:id', async (req, res) => {
-    const { id } = req.params;
     const boardName = req.query.board;
-    await Task.findByIdAndDelete(id);
+    await Task.findByIdAndDelete(req.params.id);
     const tasks = await Task.find({})
     const filteredTasks = await Task.find({ boardName })
     const allBoardsName = getAllBoards(tasks);
