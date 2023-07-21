@@ -1,7 +1,7 @@
-<%- include('../partials/head') %>
+<% layout('/layouts/boilerplate') %>
   <%- include('../partials/navbar') %>
 
-    <form action="/boards/newtask?board=<%= encodeURIComponent(boardName) %>" method="post">
+    <form action="/boards/newtask?boardName=<%= encodeURIComponent(boardName) %>" method="post">
       <div class="form-group row">
         <label for="task-text" class="col-sm-2 col-form-label">Text</label>
         <div class="col-sm-10">

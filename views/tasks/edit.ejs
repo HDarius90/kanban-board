@@ -1,4 +1,4 @@
-<%- include('../partials/head') %>
+<% layout('/layouts/boilerplate') %>
         <%- include('../partials/navbar') %>
 
         <form method="POST" action="/boards/task/<%= task._id %>?_method=PUT" >

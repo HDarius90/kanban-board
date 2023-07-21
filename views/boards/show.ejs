@@ -1,7 +1,7 @@
-<%- include('../partials/head') %>
+<% layout('/layouts/boilerplate') %>
     <%- include('../partials/navbar') %>
 
-        <h1>All Tasks</h1>
+        <h1><%= boardName %> Tasks</h1>
         <ol>
             <% for (let task of filteredTasks) { %>
                 <li>
@@ -16,4 +16,4 @@
 
 
             <a class="btn btn-primary" role="button" aria-disabled="true"
-                href="/boards/newtask?board=<%= encodeURIComponent(filteredTasks[0].boardName) %>">Add New Task</a>
+                href="/boards/newtask?boardName=<%= encodeURIComponent(filteredTasks[0].boardName) %>">Add New Task</a>
