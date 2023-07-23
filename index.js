@@ -13,7 +13,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs')
 
 app.use(express.static(path.join(__dirname, 'public')))
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 app.use(async (req, res, next) => {
     req.tasks = await Task.find({});
@@ -47,9 +47,9 @@ app.get('/boards/newtask', async (req, res) => {
 })
 
 app.post('/boards/newtask', async (req, res) => {
-    req.body.boardName = req.query.boardName;
     const { boardName } = req.query;
-    const newTask = new Task(req.body);
+    req.body.task.boardName = boardName;
+    const newTask = new Task(req.body.task);
     await newTask.save();
     const filteredTasks = await Task.find({ boardName })
     res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName })
@@ -60,7 +60,7 @@ app.get('/boards/newboard', async (req, res) => {
 })
 
 app.post('/boards/newboard', async (req, res) => {
-    const newTask = new Task(req.body);
+    const newTask = new Task(req.body.task);
     req.allBoardsName.push(newTask.boardName);
     const boardName = newTask.boardName;
     await newTask.save();
@@ -79,7 +79,7 @@ app.get('/boards/task/:id/edit', async (req, res) => {
 })
 
 app.put('/boards/task/:id', async (req, res) => {
-    const task = await Task.findByIdAndUpdate(req.params.id, req.body, { runValidators: true, new: true });
+    const task = await Task.findByIdAndUpdate(req.params.id, req.body.task, { runValidators: true, new: true });
     res.render('tasks/show', { task, allBoardsName: req.allBoardsName })
 })
 
