@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 const Task = require('./models/task.js');
 
-mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard')
-    .then(() => {
-        console.log("MONGOOSE CONNECTION OPEN!")
-    })
-    .catch(err => {
-        console.log("OH NO MONGOOOSE ERROR")
-        console.log(err);
-    })
+mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard');
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+    console.log("Database connected");
+});
 
+const seedDB = async () => {
+    await Task.deleteMany({});
 
     const seedTasks = [
         {
@@ -48,11 +48,10 @@ mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard')
             deadline: "2023-08-14"
         },
     ]
+    await Task.insertMany(seedTasks)
+}
 
-    Task.insertMany(seedTasks)
-    .then(res => {
-        console.log(res);
-    })
-    .catch(err=>{
-        console.log(err);
-    })
+
+seedDB().then(() => {
+    mongoose.connection.close()
+})
