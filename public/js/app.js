@@ -7,21 +7,21 @@ const btnCancelForm = document.querySelector('button.cancel')
 const btnAddForm = document.querySelector('button.add')
 let allTabs = document.querySelectorAll('.tablinks');
 let addProject = document.querySelector('#add-content');
-const getDate = require("../../getDate.js");
+const getDate = require("./getDate.js");
 
 
 
 import {
     dragOver, mooveCardToNewStateWithButton, getActiveTab, validateForm, addCard, appendTaskToDom, isHidden,
     openProject, AddNewProjectTab, AddNewTabContent, getAllProjectName
-} from "../../functions.js"
+} from "./functions.js"
 
 
 
 
 
 
-/* 
+
 //Rendering the projectTabs and TabContents from allTasks variable
 let allProjectNames = [];
 
@@ -167,4 +167,4 @@ btnAddForm.addEventListener('click', (e) => {
         document.getElementById("myForm").style.display = "none";   //hide the form
     }
 })
- */
+ 

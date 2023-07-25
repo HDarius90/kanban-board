@@ -1,13 +1,16 @@
 <% layout('/layouts/boilerplate') %>
 
-<h1 class="text-center">Create New Project</h1>
+  <h1 class="text-center">Create New Project</h1>
   <div class="col-6 offset-3">
-    <form action="/boards/newboard" method="post">
+    <form action="/boards/newboard" method="post" novalidate class="needs-validation">
       <div class="form-group row mb-1 p-3">
         <label for="task-text" class="col-sm-2 col-form-label"><b>Board Name:</b></label>
         <div class="col-sm-10">
           <input type="text" class="form-control" id="task-board-name" placeholder="Enter Board Name"
             name="task[boardName]" required>
+          <div class="valid-feedback">
+            Looks Good!
+          </div>
         </div>
       </div>
       <div class="form-group row mb-1 p-3">
@@ -15,6 +18,9 @@
         <div class="col-sm-10">
           <input type="text" class="form-control" id="task-text" placeholder="Enter New Task" name="task[text]"
             required>
+          <div class="valid-feedback">
+            Looks Good!
+          </div>
         </div>
       </div>
       <fieldset class="form-group mb-1 p-3">
@@ -23,19 +29,19 @@
           <div class="col-sm-10">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="task[state]" id="todo" value="todo" checked>
-              <label class="form-check-label" for="todo">
+              <label class="form-check-label" for="todo" required>
                 To Do
               </label>
             </div>
             <div class="form-check">
               <input class="form-check-input" type="radio" name="task[state]" id="inprogress" value="inprogress">
-              <label class="form-check-label" for="inprogress">
+              <label class="form-check-label" for="inprogress" required>
                 In Progress
               </label>
             </div>
             <div class="form-check disabled">
               <input class="form-check-input" type="radio" name="task[state]" id="done" value="done">
-              <label class="form-check-label" for="done">
+              <label class="form-check-label" for="done" required>
                 Done
               </label>
             </div>
@@ -48,19 +54,19 @@
           <div class="col-sm-10">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="task[priority]" id="prio-1" value="low" checked>
-              <label class="form-check-label" for="prio-1">
+              <label class="form-check-label" for="prio-1" required>
                 Low
               </label>
             </div>
             <div class="form-check">
               <input class="form-check-input" type="radio" name="task[priority]" id="prio-2" value="medium">
-              <label class="form-check-label" for="prio-2">
+              <label class="form-check-label" for="prio-2" required>
                 Medium
               </label>
             </div>
             <div class="form-check disabled">
               <input class="form-check-input" type="radio" name="task[priority]" id="prio-3" value="high">
-              <label class="form-check-label" for="prio-3">
+              <label class="form-check-label" for="prio-3" required>
                 High
               </label>
             </div>
@@ -71,7 +77,7 @@
         <label for="task-text" class="col-sm-2 col-form-label"><b>Deadline:</b></label>
         <div class="col-sm-10">
           <input type="date" class="form-control w-auto" id="deadline" name="task[deadline]" value="2023-08-22"
-            min="2023-06-26" max="2024-12-31">
+            min="2023-06-26" max="2024-12-31" required>
         </div>
       </div>
       <div class="p-3">

@@ -1,0 +1,52 @@
+body {
+    box-sizing: border-box;
+
+    background-color: #457b9d;
+  }
+
+.col-title-red {
+    background-color: #ec8796;
+    padding: 1em;
+}
+
+.col-title-yellow {
+    background-color: #f2e682;
+    padding: 1em;
+}
+
+.col-title-green {
+    background-color: #95f489;
+    padding: 1em;
+}
+
+.col {
+    border: 3px black solid;
+    padding: 0%;
+    height: 40rem;
+    margin: 1rem;
+}
+
+.alert {
+    height: 4rem;
+    transition-duration: 0.6s;
+    width: 70rem;
+    margin: auto;
+    display: none;
+}
+
+.low-prior {
+    background-color: #bde0fe;
+}
+
+.medium-prior {
+    background-color: #f2e682;
+}
+
+.high-prior {
+    background-color: #ec8796;
+}
+
+main {
+    border: 2px solid black;
+    background-color: #e5e5e5;
+}
