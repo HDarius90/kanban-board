@@ -36,9 +36,14 @@ app.get('/index', async (req, res) => {
 })
 
 app.get('/boards', async (req, res) => {
-    const { boardName } = req.query;
-    const filteredTasks = await Task.find({ boardName })
-    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName })
+    try {
+        const { boardName } = req.query;
+        const filteredTasks = await Task.find({ boardName })
+        res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName })
+    } catch (e) {
+        next(e);
+    }
+
 })
 
 app.get('/boards/newtask', async (req, res) => {
@@ -92,6 +97,10 @@ app.delete('/boards/task/:id', async (req, res) => {
 
 app.use((req, res) => {
     res.status(404).send('NOT FOUND!')
+})
+
+app.use((err, req, res, next) => {
+    res.send("ERROR")
 })
 
 app.listen(5000, () => {
