@@ -1,6 +1,6 @@
 <% layout('/layouts/boilerplate') %>
 
-<!--     <div class="board">
+    <div class="board row text-center">
         <div class="col container">
             <div class="col-title-red">
                 <h4>To Do</h4>
@@ -16,11 +16,11 @@
                 <h4>Done</h4>
             </div>
         </div>
-    </div> -->
+    </div>
 
 
 
-
+    <!-- 
     <h1>
         <%= boardName %> Tasks
     </h1>
@@ -34,10 +34,16 @@
             </li>
             <% } %>
 
-    </ol>
+    </ol> -->
 
 
     <a class="btn btn-primary" role="button" aria-disabled="true"
         href="/boards/newtask?boardName=<%= encodeURIComponent(filteredTasks[0].boardName) %>">Add New Task</a>
 
-    <script type="module" src="/js/app.js"></script>
+
+    <script>
+        // Define the filteredTasks variable in the global scope
+        const tasks = '<%- JSON.stringify(filteredTasks) %>';
+    </script>
+
+    <script type="module" src="/js/render.js"></script>
