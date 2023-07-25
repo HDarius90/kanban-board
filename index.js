@@ -8,6 +8,7 @@ const Task = require('./models/task');
 const bodyParser = require('body-parser');
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
+const Joi = require('joi');
 const { getAllBoards, convertISODateToYYYYMMDD } = require('./utils/utils'); // 
 
 app.engine('ejs', ejsMate);
@@ -51,6 +52,22 @@ app.get('/boards/newtask', catchAsync(async (req, res) => {
 app.post('/boards/newtask', catchAsync(async (req, res) => {
     const { boardName } = req.query;
     req.body.task.boardName = boardName;
+
+    const taskSchema = Joi.object({
+        task: Joi.object({
+            boardName: Joi.string().required(),
+            text: Joi.string().required(),
+            state: Joi.string().required().valid('todo', 'inprogress', 'done'),
+            priority: Joi.string().required().valid('low', 'medium', 'high'),
+            deadline: Joi.date().greater('now').required()
+        }).required()
+    })
+    const { error } = taskSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',');
+        throw new ExpressError(msg, 400);
+    }
+
     const newTask = new Task(req.body.task);
     await newTask.save();
     const filteredTasks = await Task.find({ boardName })
@@ -62,7 +79,22 @@ app.get('/boards/newboard', catchAsync(async (req, res) => {
 }))
 
 app.post('/boards/newboard', catchAsync(async (req, res) => {
-    if(!req.body.task) throw new ExpressError('Invalid Task Data', 400)
+
+    const taskSchema = Joi.object({
+        task: Joi.object({
+            boardName: Joi.string().required(),
+            text: Joi.string().required(),
+            state: Joi.string().required().valid('todo', 'inprogress', 'done'),
+            priority: Joi.string().required().valid('low', 'medium', 'high'),
+            deadline: Joi.date().greater('now').required()
+        }).required()
+    })
+    const { error } = taskSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',');
+        throw new ExpressError(msg, 400);
+    }
+    
     const newTask = new Task(req.body.task);
     req.allBoardsName.push(newTask.boardName);
     const boardName = newTask.boardName;
