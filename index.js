@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const Task = require('./models/task');
 const bodyParser = require('body-parser');
 const catchAsync = require('./utils/catchAsync')
+const ExpressError = require('./utils/ExpressError')
 const { getAllBoards, convertISODateToYYYYMMDD } = require('./utils/utils'); // 
 
 app.engine('ejs', ejsMate);
@@ -61,6 +62,7 @@ app.get('/boards/newboard', catchAsync(async (req, res) => {
 }))
 
 app.post('/boards/newboard', catchAsync(async (req, res) => {
+    if(!req.body.task) throw new ExpressError('Invalid Task Data', 400)
     const newTask = new Task(req.body.task);
     req.allBoardsName.push(newTask.boardName);
     const boardName = newTask.boardName;
@@ -91,12 +93,13 @@ app.delete('/boards/task/:id', catchAsync(async (req, res) => {
     res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName })
 }))
 
-app.use((req, res) => {
-    res.status(404).send('NOT FOUND!')
+app.all('*', (req, res, next) => {
+    next(new ExpressError('Page not found!', 404))
 })
 
 app.use((err, req, res, next) => {
-    res.send("ERROR")
+    const { statusCode = 500, message =  "Something went wrong!"} = err;
+    res.status(statusCode).send(message);
 })
 
 app.listen(5000, () => {
