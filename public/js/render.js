@@ -23,12 +23,16 @@ btnLeft.addEventListener('click', () => {
     let focusedTask = allTask.find(task => task._id === selectedCard.id);
     switch (focusedTask.state) {
         case 'inprogress':
-            focusedTask.state = 'todo';
-            mooveCardToNewStateWithButton(focusedTask, selectedCard)
+            if (document.querySelector('#todo-col').children.length < 7) {
+                focusedTask.state = 'todo';
+                mooveCardToNewStateWithButton(focusedTask, selectedCard)
+            }
             break;
         case 'done':
-            focusedTask.state = 'inprogress';
-            mooveCardToNewStateWithButton(focusedTask, selectedCard)
+            if (document.querySelector('#inprogress-col').children.length < 7) {
+                focusedTask.state = 'inprogress';
+                mooveCardToNewStateWithButton(focusedTask, selectedCard)
+            }
             break;
     }
 })
@@ -39,12 +43,16 @@ btnRight.addEventListener('click', () => {
     let focusedTask = allTask.find(task => task._id === selectedCard.id);
     switch (focusedTask.state) {
         case 'todo':
-            focusedTask.state = 'inprogress';
-            mooveCardToNewStateWithButton(focusedTask, selectedCard)
+            if (document.querySelector('#inprogress-col').children.length < 7) {
+                focusedTask.state = 'inprogress';
+                mooveCardToNewStateWithButton(focusedTask, selectedCard)
+            }
             break;
         case 'inprogress':
-            focusedTask.state = 'done';
-            mooveCardToNewStateWithButton(focusedTask, selectedCard)
+            if (document.querySelector('#done-col').children.length < 7) {
+                focusedTask.state = 'done';
+                mooveCardToNewStateWithButton(focusedTask, selectedCard)
+            }
             break;
     }
 });

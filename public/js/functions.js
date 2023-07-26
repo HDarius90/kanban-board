@@ -76,8 +76,9 @@ export function mooveCardToNewStateWithButton(task, selectedCard) {
     allColumns.forEach((col) => {
         if (col.id.includes(task.state)) col.appendChild(selectedCard);
     })
-
 }
+
+
 
 
 
@@ -86,27 +87,29 @@ export function dragOver(column, allTask) {
         e.preventDefault()
         const afterElement = getDragAfterElement(column, e.clientY)
         const draggable = document.querySelector('.dragging') //set the current draggable element then append it to the current container
-        if (afterElement == null) {                         // set conditions and check the AfterElements, 
-            column.appendChild(draggable)                      //and if it is set to null, append a child at the end of the list.
-        }
-        else {
-            column.insertBefore(draggable, afterElement)     // Else, add the element draggable and afterElement as parameters in the insertBefore function.
-        }
-        let draggedTask = allTask.find(task => task._id === draggable.id);
-        console.log(draggedTask);
-        switch (column.id) {
-            case 'todo-col':
-                draggedTask.state = 'todo';
-                break;
-            case 'inprogress-col':
-                draggedTask.state = 'inprogress';
-                break;
-            case 'done-col':
-                draggedTask.state = 'done';
-                break;
+        if (column.children.length < 7) {
+            if (afterElement == null) {                         // set conditions and check the AfterElements, 
+                column.appendChild(draggable)                      //and if it is set to null, append a child at the end of the list.
+            }
+            else {
+                column.insertBefore(draggable, afterElement)     // Else, add the element draggable and afterElement as parameters in the insertBefore function.
+            }
+            let draggedTask = allTask.find(task => task._id === draggable.id);
+            switch (column.id) {
+                case 'todo-col':
+                    draggedTask.state = 'todo';
+                    break;
+                case 'inprogress-col':
+                    draggedTask.state = 'inprogress';
+                    break;
+                case 'done-col':
+                    draggedTask.state = 'done';
+                    break;
+            }
         }
     })
 }
+
 
 function convertISODateToYYYYMMDD(isoDate) {
     const date = new Date(isoDate);
