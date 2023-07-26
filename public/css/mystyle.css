@@ -2,7 +2,7 @@ body {
     box-sizing: border-box;
 
     background-color: #e3d5ca;
-  }
+}
 
 .col-title-red {
     background-color: #ec8796;
@@ -38,3 +38,28 @@ body {
     background-color: #ec8796;
 }
 
+.card {
+    cursor: move;
+    margin: 2rem;
+    transition-duration: 0.4s;
+}
+
+.focus {
+    background-color: aqua;
+    font-weight: bold;
+    transform: scale(1.11);
+    border: 2px black solid;
+}
+
+
+  /*cardhoovering showes title attribute of the card*/
+.card:hover:after {
+    position: absolute;
+    content: attr(title);
+    display: inline-block;
+    left: 0px;
+    top: 0px;
+    padding: 5px;
+    background-color: black;
+    color: white;
+  }

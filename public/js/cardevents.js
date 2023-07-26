@@ -18,14 +18,10 @@ export function addEventListeners(element, allTasks) {
 
     //rename tasks on dbclick event and update text on allTasks variable
     element.addEventListener('dblclick', () => {
-        let newTaskText = prompt('Rename task:');
-        if (newTaskText) {
-            element.firstElementChild.firstElementChild.textContent = newTaskText;
-            allTasks.forEach(task => {
-                if(element.id.includes(task.id)){
-                    task.text = newTaskText;
-                }
-            });
-        }
+        // Get the task ID from the element's data attribute
+        const taskId = element.id;
+
+        // Navigate to the edit page by updating the URL
+        window.location.href = `/boards/task/${taskId}/edit`;
     })
 }

@@ -1,5 +1,5 @@
 <% layout('/layouts/boilerplate') %>
-<h1 class="text-center">Edit "<%= task.text %>" Task</h1>
+  <h1 class="text-center">Edit "<%= task.text %>" Task</h1>
   <div class="col-6 offset-3">
     <form method="POST" action="/boards/task/<%= task._id %>?_method=PUT" novalidate class="needs-validation">
       <div class="form-group row mb-1 p-3 d-none">
@@ -17,9 +17,9 @@
         <div class="col-sm-10">
           <input type="text" class="form-control" id="task-text" placeholder="Enter New Task" name="task[text]"
             value="<%= task.text %>" required>
-            <div class="valid-feedback">
-              Looks Good!
-            </div>
+          <div class="valid-feedback">
+            Looks Good!
+          </div>
         </div>
       </div>
       <fieldset class="form-group mb-1 p-3">
@@ -89,8 +89,11 @@
         <button type="submit" class="btn btn-success">Edit Task</button>
       </div>
     </form>
+    <form class= "p-3" action="/boards/task/<%= task._id %>?boardName=<%= task.boardName %>&_method=DELETE" method="post">
+      <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
 
     <div class="p-3">
-      <a href="/boards/task/<%= task._id %>">Back</a>
+      <a href="/boards/?boardName=<%= task.boardName %>">Back</a>
     </div>
   </div>

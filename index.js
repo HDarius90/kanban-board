@@ -52,8 +52,25 @@ app.get('/boards', catchAsync(async (req, res) => {
     const { boardName } = req.query;
     const filteredTasks = await Task.find({ boardName })
     if (filteredTasks.length === 0) throw new ExpressError('Board not found', 404);
-    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName })
+    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName, saveSuccess: false })
 }))
+
+// Handle the POST request to save the database variable
+app.put('/save-database', catchAsync(async (req, res) => {
+    const database = JSON.parse(req.body.database); // Retrieve the database variable from the request body
+
+    // Perform any processing or actions with the database variable
+    // For demonstration purposes, we will just send a simple response
+    database.forEach(async element => {
+        console.log(element._id);
+        await Task.findByIdAndUpdate(element._id, element)
+    });
+    // res.json({ message: 'Database variable saved successfully.' });
+    const boardName = database[0].boardName;
+    const filteredTasks = await Task.find({ boardName })
+    if (filteredTasks.length === 0) throw new ExpressError('Board not found', 404);
+    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName , saveSuccess: true})
+}));
 
 app.get('/boards/newtask', catchAsync(async (req, res) => {
     const { boardName } = req.query;
@@ -64,7 +81,7 @@ app.post('/boards/newtask', validateTask, catchAsync(async (req, res) => {
     const newTask = new Task(req.body.task);
     await newTask.save();
     const filteredTasks = await Task.find({ boardName: newTask.boardName })
-    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName: newTask.boardName })
+    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName: newTask.boardName, saveSuccess: false  })
 }))
 
 app.get('/boards/newboard', catchAsync(async (req, res) => {
@@ -77,12 +94,7 @@ app.post('/boards/newboard', validateTask, catchAsync(async (req, res) => {
     const boardName = newTask.boardName;
     await newTask.save();
     const filteredTasks = await Task.find({ boardName })
-    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName })
-}))
-
-app.get('/boards/task/:id', catchAsync(async (req, res) => {
-    const task = await Task.findById(req.params.id);
-    res.render('tasks/show', { task, allBoardsName: req.allBoardsName })
+    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName, saveSuccess: false })
 }))
 
 app.get('/boards/task/:id/edit', catchAsync(async (req, res) => {
@@ -92,7 +104,8 @@ app.get('/boards/task/:id/edit', catchAsync(async (req, res) => {
 
 app.put('/boards/task/:id', validateTask, catchAsync(async (req, res) => {
     const task = await Task.findByIdAndUpdate(req.params.id, req.body.task, { runValidators: true, new: true });
-    res.render('tasks/show', { task, allBoardsName: req.allBoardsName })
+    const filteredTasks = await Task.find({ boardName: task.boardName })
+    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName: task.boardName, saveSuccess: false })
 }))
 
 app.delete('/boards/task/:id', catchAsync(async (req, res) => {
@@ -100,7 +113,7 @@ app.delete('/boards/task/:id', catchAsync(async (req, res) => {
     await Task.findByIdAndDelete(req.params.id);
     const filteredTasks = await Task.find({ boardName })
     if (filteredTasks.length === 0) throw new ExpressError('No more tasks to show', 404);
-    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName })
+    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName, saveSuccess: false })
 }))
 
 app.all('*', (req, res, next) => {

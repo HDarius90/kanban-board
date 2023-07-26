@@ -1,58 +1,71 @@
 
-const allTask = JSON.parse(tasks);
-let allColumns = document.querySelectorAll('.col');
-console.log(allTask);
+import { appendTaskToDom, addCard, dragOver, mooveCardToNewStateWithButton } from "./functions.js";
 
-allTask.forEach((task) => {
-    switch (task.state) {
-        case 'todo':
-            addCard(task, allColumns[0], allTask);
-            break;
+const btnLeft = document.querySelector('.btn-left');
+const btnRight = document.querySelector('.btn-right');
+const btnSave = document.getElementById('saveButton');
+
+
+let allTask = JSON.parse(tasks);
+
+allTask.forEach((task) => appendTaskToDom(task, addCard, allTask));
+
+//add dragover event for hovering elements around
+const columns = document.querySelectorAll('.col')
+columns.forEach(column => {
+    dragOver(column, allTask);
+})
+
+
+//Mooving cards in the columns to the left and updating the task.state
+btnLeft.addEventListener('click', () => {
+    let selectedCard = document.querySelector('.focus')
+    let focusedTask = allTask.find(task => task._id === selectedCard.id);
+    switch (focusedTask.state) {
         case 'inprogress':
-            addCard(task, allColumns[1], allTask);
+            focusedTask.state = 'todo';
+            mooveCardToNewStateWithButton(focusedTask, selectedCard)
             break;
         case 'done':
-            addCard(task, allColumns[2], allTask);
+            focusedTask.state = 'inprogress';
+            mooveCardToNewStateWithButton(focusedTask, selectedCard)
+            break;
+    }
+})
+
+//Mooving cards in the columns to the right and updating the task.state
+btnRight.addEventListener('click', () => {
+    let selectedCard = document.querySelector('.focus')
+    let focusedTask = allTask.find(task => task._id === selectedCard.id);
+    switch (focusedTask.state) {
+        case 'todo':
+            focusedTask.state = 'inprogress';
+            mooveCardToNewStateWithButton(focusedTask, selectedCard)
+            break;
+        case 'inprogress':
+            focusedTask.state = 'done';
+            mooveCardToNewStateWithButton(focusedTask, selectedCard)
             break;
     }
 });
 
+btnSave.addEventListener('click', function () {
+    const database = allTask; // Replace with the actual database variable
 
-function addCard(task, element, allTasks) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/save-database?_method=PUT';
 
-    //determ priority css class
-    let cardBodyClassList = '';
-    switch (task.priority) {
-        case 'low':
-            cardBodyClassList = 'card-body low-prior';
-            break;
-        case 'medium':
-            cardBodyClassList = 'card-body medium-prior'
-            break;
-        case 'high':
-            cardBodyClassList = 'card-body high-prior'
-            break;
-    }
+    // Create a hidden input field to store the database variable
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'database';
+    input.value = JSON.stringify(database); // Convert the array to JSON string
 
-    if (element.children.length < 7) {
-        element.
-            appendChild(
-                Object.assign(
-                    document.createElement('div'),
-                    { className: 'card', draggable: true, id: task.id, title: task.deadline }
-                )
-            ).appendChild(
-                Object.assign(
-                    document.createElement('div'),
-                    { className: cardBodyClassList }
-                )
-            ).appendChild(
-                Object.assign(
-                    document.createElement('span'),
-                    { innerText: task.text }
-                )
-            )
+    // Append the input field to the form
+    form.appendChild(input);
 
-        // addEventListeners(element.lastChild, allTasks);
-    }
-}
+    // Append the form to the document and submit it
+    document.body.appendChild(form);
+    form.submit();
+});
