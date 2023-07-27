@@ -34,7 +34,6 @@ const validateTask = (req, res, next) => {
     }
 }
 
-
 mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard');
 
 const db = mongoose.connection;
@@ -56,13 +55,12 @@ app.get('/boards', catchAsync(async (req, res) => {
 }))
 
 // Handle the POST request to save the database variable
-app.put('/save-database', catchAsync(async (req, res) => {
+app.patch('/save-database', catchAsync(async (req, res) => {
     const database = JSON.parse(req.body.database); // Retrieve the database variable from the request body
 
     // Perform any processing or actions with the database variable
     // For demonstration purposes, we will just send a simple response
     database.forEach(async element => {
-        console.log(element._id);
         await Task.findByIdAndUpdate(element._id, element)
     });
     // res.json({ message: 'Database variable saved successfully.' });
@@ -71,18 +69,6 @@ app.put('/save-database', catchAsync(async (req, res) => {
     if (filteredTasks.length === 0) throw new ExpressError('Board not found', 404);
     res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName , saveSuccess: true})
 }));
-
-app.get('/boards/newtask', catchAsync(async (req, res) => {
-    const { boardName } = req.query;
-    res.render('tasks/new', { allBoardsName: req.allBoardsName, boardName });
-}))
-
-app.post('/boards/newtask', validateTask, catchAsync(async (req, res) => {
-    const newTask = new Task(req.body.task);
-    await newTask.save();
-    const filteredTasks = await Task.find({ boardName: newTask.boardName })
-    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName: newTask.boardName, saveSuccess: false  })
-}))
 
 app.get('/boards/newboard', catchAsync(async (req, res) => {
     res.render('boards/new', { allBoardsName: req.allBoardsName });
@@ -95,6 +81,18 @@ app.post('/boards/newboard', validateTask, catchAsync(async (req, res) => {
     await newTask.save();
     const filteredTasks = await Task.find({ boardName })
     res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName, saveSuccess: false })
+}))
+
+app.get('/boards/task/new', catchAsync(async (req, res) => {
+    const { boardName } = req.query;
+    res.render('tasks/new', { allBoardsName: req.allBoardsName, boardName });
+}))
+
+app.post('/boards/task/new', validateTask, catchAsync(async (req, res) => {
+    const newTask = new Task(req.body.task);
+    await newTask.save();
+    const filteredTasks = await Task.find({ boardName: newTask.boardName })
+    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName: newTask.boardName, saveSuccess: false  })
 }))
 
 app.get('/boards/task/:id/edit', catchAsync(async (req, res) => {

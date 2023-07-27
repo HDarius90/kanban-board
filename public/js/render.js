@@ -62,7 +62,7 @@ btnSave.addEventListener('click', function () {
 
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = '/save-database?_method=PUT';
+    form.action = '/save-database?_method=PATCH';
 
     // Create a hidden input field to store the database variable
     const input = document.createElement('input');

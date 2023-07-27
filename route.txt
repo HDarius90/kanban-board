@@ -1,0 +1,10 @@
+/index - GET - show all Boards
+/boards - GET - show Board
+/save-database - PATCH - save tasks on Boards
+/boards/newboard - GET - show newboard form
+/boards/newboard - POST - save newboard form
+/boards/task/new - GET - show newtask form
+/boards/task/new - POST - save newtask form
+/boards/task/:id/edit - GET - show edit task form
+/boards/task/:id - PUT - save edit task form
+/boards/task/:id - DELETE - delete task
