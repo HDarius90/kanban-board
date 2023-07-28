@@ -5,25 +5,18 @@ const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const Task = require('./models/task');
+const Board = require('./models/board');
 const bodyParser = require('body-parser');
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
 const taskSchema = require('./schemas');
-const { getAllBoards, convertISODateToYYYYMMDD } = require('./utils/utils'); // 
+const { convertISODateToYYYYMMDD } = require('./utils/utils'); // 
 
 app.engine('ejs', ejsMate);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs')
 
-app.use(express.static(path.join(__dirname, 'public')))
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(methodOverride('_method'))
-app.use(async (req, res, next) => {
-    req.tasks = await Task.find({});
-    req.allBoardsName = getAllBoards(req.tasks);
-    next();
-})
-
+// Common middleware to validate task schema and throw an error
 const validateTask = (req, res, next) => {
     const { error } = taskSchema.validate(req.body);
     if (error) {
@@ -34,6 +27,18 @@ const validateTask = (req, res, next) => {
     }
 }
 
+// Common middleware to fetch boards
+const fetchBoards = catchAsync(async (req, res, next) => {
+    res.locals.boards = await Board.find({});
+    next();
+});
+
+// These middlewares will be executed for every route
+app.use(express.static(path.join(__dirname, 'public')))
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(methodOverride('_method'))
+app.use(fetchBoards);
+
 mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard');
 
 const db = mongoose.connection;
@@ -43,75 +48,70 @@ db.once("open", () => {
 });
 
 
-app.get('/index', catchAsync(async (req, res) => {
-    res.render('boards/index', { tasks: req.tasks, allBoardsName: req.allBoardsName })
-}))
+app.get('/index', (req, res) => {
+    res.render('boards/index')
+})
 
-app.get('/boards', catchAsync(async (req, res) => {
-    const { boardName } = req.query;
-    const filteredTasks = await Task.find({ boardName })
-    if (filteredTasks.length === 0) throw new ExpressError('Board not found', 404);
-    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName, saveSuccess: false })
-}))
+app.patch('/save-database/:boardID', catchAsync(async (req, res) => {
+    const database = JSON.parse(req.body.database);
 
-// Handle the POST request to save the database variable
-app.patch('/save-database', catchAsync(async (req, res) => {
-    const database = JSON.parse(req.body.database); // Retrieve the database variable from the request body
 
-    // Perform any processing or actions with the database variable
-    // For demonstration purposes, we will just send a simple response
     database.forEach(async element => {
         await Task.findByIdAndUpdate(element._id, element)
     });
-    // res.json({ message: 'Database variable saved successfully.' });
-    const boardName = database[0].boardName;
-    const filteredTasks = await Task.find({ boardName })
-    if (filteredTasks.length === 0) throw new ExpressError('Board not found', 404);
-    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName , saveSuccess: true})
+    const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
+    res.render('boards/show', { selectedBoard, saveSuccess: true })
 }));
 
 app.get('/boards/newboard', catchAsync(async (req, res) => {
-    res.render('boards/new', { allBoardsName: req.allBoardsName });
+    res.render('boards/new');
 }))
 
 app.post('/boards/newboard', validateTask, catchAsync(async (req, res) => {
     const newTask = new Task(req.body.task);
-    req.allBoardsName.push(newTask.boardName);
-    const boardName = newTask.boardName;
+    const newBoard = new Board({ name: newTask.boardName, tasks: newTask });
     await newTask.save();
-    const filteredTasks = await Task.find({ boardName })
-    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName, saveSuccess: false })
+    await newBoard.save();
+    res.locals.boards = await Board.find({});
+    const selectedBoard = await Board.findById(newBoard._id).populate('tasks');
+    res.render('boards/show', { selectedBoard, saveSuccess: false })
 }))
 
-app.get('/boards/task/new', catchAsync(async (req, res) => {
-    const { boardName } = req.query;
-    res.render('tasks/new', { allBoardsName: req.allBoardsName, boardName });
+app.get('/boards/:boardID/new', catchAsync(async (req, res) => {
+    const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
+    res.render('tasks/new', { selectedBoard });
 }))
 
-app.post('/boards/task/new', validateTask, catchAsync(async (req, res) => {
+app.post('/boards/:boardID/new', validateTask, catchAsync(async (req, res) => {
+    const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
+    req.body.task.boardName = selectedBoard._id;
     const newTask = new Task(req.body.task);
+    selectedBoard.tasks.push(newTask);
     await newTask.save();
-    const filteredTasks = await Task.find({ boardName: newTask.boardName })
-    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName: newTask.boardName, saveSuccess: false  })
+    await selectedBoard.save();
+    res.render('boards/show', { selectedBoard, saveSuccess: false })
 }))
 
-app.get('/boards/task/:id/edit', catchAsync(async (req, res) => {
-    const task = await Task.findById(req.params.id);
-    res.render('tasks/edit', { task, allBoardsName: req.allBoardsName, convertISODateToYYYYMMDD })
+app.get('/boards/task/:taskID/edit', catchAsync(async (req, res) => {
+    const task = await Task.findById(req.params.taskID);
+    res.render('tasks/edit', { task, convertISODateToYYYYMMDD })
 }))
 
-app.put('/boards/task/:id', validateTask, catchAsync(async (req, res) => {
-    const task = await Task.findByIdAndUpdate(req.params.id, req.body.task, { runValidators: true, new: true });
-    const filteredTasks = await Task.find({ boardName: task.boardName })
-    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName: task.boardName, saveSuccess: false })
+app.put('/boards/task/:taskID', validateTask, catchAsync(async (req, res) => {
+    const task = await Task.findByIdAndUpdate(req.params.taskID, req.body.task, { runValidators: true, new: true }).populate('boardName');
+    const selectedBoard = await Board.findById(task.boardName._id).populate('tasks');
+    res.render('boards/show', { selectedBoard, saveSuccess: false })
 }))
 
-app.delete('/boards/task/:id', catchAsync(async (req, res) => {
-    const { boardName } = req.query;
-    await Task.findByIdAndDelete(req.params.id);
-    const filteredTasks = await Task.find({ boardName })
-    if (filteredTasks.length === 0) throw new ExpressError('No more tasks to show', 404);
-    res.render('boards/show', { filteredTasks, allBoardsName: req.allBoardsName, boardName, saveSuccess: false })
+app.delete('/boards/task/:taskID', catchAsync(async (req, res) => {
+    const deletedTask = await Task.findByIdAndDelete(req.params.taskID);
+    const selectedBoard = await Board.findById(deletedTask.boardName).populate('tasks');
+    res.render('boards/show', { selectedBoard, saveSuccess: false })
+}))
+
+app.get('/boards/:boardID', catchAsync(async (req, res) => {
+    const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
+    res.render('boards/show', { selectedBoard, saveSuccess: false })
 }))
 
 app.all('*', (req, res, next) => {

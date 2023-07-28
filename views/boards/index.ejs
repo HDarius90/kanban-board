@@ -1,11 +1,16 @@
 <% layout('/layouts/boilerplate') %>
 
-            <h1>All Projects</h1>
+            <h1>All Boards</h1>
             <ul>
-                <% for (let boardName of allBoardsName) { %>
-                    <li>
-                        <%= boardName %>
+
+                <% for (let key in boards) { %>
+                    <% const board = boards[key]; %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/boards/<%= board._id %>">
+                            <%= board.name %>
+                        </a>
                     </li>
-                    <% } %>
+                <% } %>
             </ul>
+
 

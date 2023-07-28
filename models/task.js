@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const taskSchema = new mongoose.Schema({
     boardName: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'Board',
         required: [true, "Board name is required"]
     },
     text: {
@@ -35,7 +37,9 @@ const taskSchema = new mongoose.Schema({
             message: 'Deadline must be a valid date and cannot be in the past.',
         },
     }
-})
+});
+
+
 
 const Task = mongoose.model('Task', taskSchema)
 
