@@ -33,11 +33,25 @@ const fetchBoards = catchAsync(async (req, res, next) => {
     next();
 });
 
+function saveSuccessOn(req, res, next) {
+    // Turn ON the saveSuccess flag in the response locals
+    res.locals.saveSuccess = true;
+    next();
+}
+function saveSuccessOff(req, res, next) {
+    // Turn OFF the saveSuccess flag in the response locals
+    res.locals.saveSuccess = false;
+    next();
+}
+
 // These middlewares will be executed for every route
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 app.use(fetchBoards);
+app.use(saveSuccessOff);
+app.use('/save-database/:boardID', saveSuccessOn);
+
 
 mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard');
 
@@ -54,13 +68,11 @@ app.get('/index', (req, res) => {
 
 app.patch('/save-database/:boardID', catchAsync(async (req, res) => {
     const database = JSON.parse(req.body.database);
-
-
     database.forEach(async element => {
         await Task.findByIdAndUpdate(element._id, element)
     });
     const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
-    res.render('boards/show', { selectedBoard, saveSuccess: true })
+    res.render('boards/show', { selectedBoard })
 }));
 
 app.get('/boards/newboard', catchAsync(async (req, res) => {
@@ -77,7 +89,7 @@ app.post('/boards/newboard', validateTask, catchAsync(async (req, res) => {
     await newTask.save();
     res.locals.boards = await Board.find({});
     const selectedBoard = await Board.findById(newBoard._id).populate('tasks');
-    res.render('boards/show', { selectedBoard, saveSuccess: false })
+    res.render('boards/show', { selectedBoard })
 }))
 
 app.get('/boards/:boardID/newtask', catchAsync(async (req, res) => {
@@ -92,7 +104,7 @@ app.post('/boards/:boardID/newtask', validateTask, catchAsync(async (req, res) =
     selectedBoard.tasks.push(newTask);
     await newTask.save();
     await selectedBoard.save();
-    res.render('boards/show', { selectedBoard, saveSuccess: false })
+    res.render('boards/show', { selectedBoard })
 }))
 
 app.get('/boards/:boardID/delete', catchAsync(async (req, res) => {
@@ -109,18 +121,18 @@ app.get('/boards/task/:taskID/edit', catchAsync(async (req, res) => {
 app.put('/boards/task/:taskID', validateTask, catchAsync(async (req, res) => {
     const task = await Task.findByIdAndUpdate(req.params.taskID, req.body.task, { runValidators: true, new: true }).populate('boardName');
     const selectedBoard = await Board.findById(task.boardName._id).populate('tasks');
-    res.render('boards/show', { selectedBoard, saveSuccess: false })
+    res.render('boards/show', { selectedBoard })
 }))
 
 app.delete('/boards/task/:taskID', catchAsync(async (req, res) => {
     const deletedTask = await Task.findByIdAndDelete(req.params.taskID);
     const selectedBoard = await Board.findById(deletedTask.boardName).populate('tasks');
-    res.render('boards/show', { selectedBoard, saveSuccess: false })
+    res.render('boards/show', { selectedBoard })
 }))
 
 app.get('/boards/:boardID', catchAsync(async (req, res) => {
     const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
-    res.render('boards/show', { selectedBoard, saveSuccess: false })
+    res.render('boards/show', { selectedBoard })
 }))
 
 app.all('*', (req, res, next) => {
