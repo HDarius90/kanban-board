@@ -5,7 +5,6 @@ const taskSchema = new mongoose.Schema({
     boardName: {
         type: Schema.Types.ObjectId,
         ref: 'Board',
-        required: [true, "Board name is required"]
     },
     text: {
         type: String,

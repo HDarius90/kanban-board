@@ -20,8 +20,9 @@
         </div>
         <% } %>
 
-            <h1 class="text-center"><%= selectedBoard.name
-             %></h1>
+            <h1 class="text-center">
+                <%= selectedBoard.name %>
+            </h1>
 
 
             <div class="board row text-center">
@@ -48,7 +49,12 @@
             <button type="submit" id="saveButton" class="btn btn-success m-3">Save</button>
 
 
+            <a class="btn btn-primary m-3" role="button" aria-disabled="true"
+                href="/boards/<%= selectedBoard._id %>/new %>">Add New
+                Task</a>
 
+            <a class="btn btn-danger m-3" role="button" aria-disabled="true"
+                href="/boards/<%= selectedBoard._id %>/delete%>">Delete Board</a>
 
             <div class="btn-group btn-group-toggle p-3" data-toggle="buttons">
 
@@ -68,9 +74,7 @@
 
             </div>
 
-            <a class="btn btn-primary m-3" role="button" aria-disabled="true"
-                href="/boards/<%= selectedBoard._id %>/new %>">Add New
-                Task</a>
+
 
             <script>
                 // Define the filteredTasks variable in the global scope

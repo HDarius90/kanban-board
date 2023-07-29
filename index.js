@@ -68,21 +68,24 @@ app.get('/boards/newboard', catchAsync(async (req, res) => {
 }))
 
 app.post('/boards/newboard', validateTask, catchAsync(async (req, res) => {
+    console.log(req.body);
+    const newBoard = new Board({ name: req.body.board.name });
     const newTask = new Task(req.body.task);
-    const newBoard = new Board({ name: newTask.boardName, tasks: newTask });
-    await newTask.save();
+    newTask.boardName = newBoard;
+    newBoard.tasks.push(newTask);
     await newBoard.save();
+    await newTask.save();
     res.locals.boards = await Board.find({});
     const selectedBoard = await Board.findById(newBoard._id).populate('tasks');
     res.render('boards/show', { selectedBoard, saveSuccess: false })
 }))
 
-app.get('/boards/:boardID/new', catchAsync(async (req, res) => {
+app.get('/boards/:boardID/newtask', catchAsync(async (req, res) => {
     const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
     res.render('tasks/new', { selectedBoard });
 }))
 
-app.post('/boards/:boardID/new', validateTask, catchAsync(async (req, res) => {
+app.post('/boards/:boardID/newtask', validateTask, catchAsync(async (req, res) => {
     const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
     req.body.task.boardName = selectedBoard._id;
     const newTask = new Task(req.body.task);
@@ -90,6 +93,12 @@ app.post('/boards/:boardID/new', validateTask, catchAsync(async (req, res) => {
     await newTask.save();
     await selectedBoard.save();
     res.render('boards/show', { selectedBoard, saveSuccess: false })
+}))
+
+app.get('/boards/:boardID/delete', catchAsync(async (req, res) => {
+    await Board.findByIdAndDelete(req.params.boardID);
+    res.locals.boards = await Board.find({});
+    res.render('boards/index')
 }))
 
 app.get('/boards/task/:taskID/edit', catchAsync(async (req, res) => {
