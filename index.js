@@ -28,18 +28,19 @@ const validateTask = (req, res, next) => {
 }
 
 // Common middleware to fetch boards
+
 const fetchBoards = catchAsync(async (req, res, next) => {
     res.locals.boards = await Board.find({});
     next();
 });
 
+// Common middleware to turn ON the saveSuccess flag in the response locals
 function saveSuccessOn(req, res, next) {
-    // Turn ON the saveSuccess flag in the response locals
     res.locals.saveSuccess = true;
     next();
 }
 function saveSuccessOff(req, res, next) {
-    // Turn OFF the saveSuccess flag in the response locals
+    // Common middleware to turn OFF the saveSuccess flag in the response locals
     res.locals.saveSuccess = false;
     next();
 }
@@ -50,9 +51,11 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 app.use(fetchBoards);
 app.use(saveSuccessOff);
+
+// This middleware only executed if you hit the save route
 app.use('/save-database/:boardID', saveSuccessOn);
 
-
+// Setting up mongoDB connection with mongoose
 mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard');
 
 const db = mongoose.connection;
@@ -62,6 +65,8 @@ db.once("open", () => {
 });
 
 
+
+// ROUTES
 app.get('/index', (req, res) => {
     res.render('boards/index')
 })
@@ -80,16 +85,13 @@ app.get('/boards/newboard', catchAsync(async (req, res) => {
 }))
 
 app.post('/boards/newboard', validateTask, catchAsync(async (req, res) => {
-    console.log(req.body);
     const newBoard = new Board({ name: req.body.board.name });
     const newTask = new Task(req.body.task);
     newTask.boardName = newBoard;
     newBoard.tasks.push(newTask);
     await newBoard.save();
     await newTask.save();
-    res.locals.boards = await Board.find({});
-    const selectedBoard = await Board.findById(newBoard._id).populate('tasks');
-    res.render('boards/show', { selectedBoard })
+    res.redirect(`/boards/${newBoard._id}`)
 }))
 
 app.get('/boards/:boardID/newtask', catchAsync(async (req, res) => {
@@ -104,7 +106,7 @@ app.post('/boards/:boardID/newtask', validateTask, catchAsync(async (req, res) =
     selectedBoard.tasks.push(newTask);
     await newTask.save();
     await selectedBoard.save();
-    res.render('boards/show', { selectedBoard })
+    res.redirect(`/boards/${selectedBoard._id}`)
 }))
 
 app.get('/boards/:boardID/delete', catchAsync(async (req, res) => {
@@ -120,14 +122,12 @@ app.get('/boards/task/:taskID/edit', catchAsync(async (req, res) => {
 
 app.put('/boards/task/:taskID', validateTask, catchAsync(async (req, res) => {
     const task = await Task.findByIdAndUpdate(req.params.taskID, req.body.task, { runValidators: true, new: true }).populate('boardName');
-    const selectedBoard = await Board.findById(task.boardName._id).populate('tasks');
-    res.render('boards/show', { selectedBoard })
+    res.redirect(`/boards/${task.boardName._id}`);
 }))
 
 app.delete('/boards/task/:taskID', catchAsync(async (req, res) => {
     const deletedTask = await Task.findByIdAndDelete(req.params.taskID);
-    const selectedBoard = await Board.findById(deletedTask.boardName).populate('tasks');
-    res.render('boards/show', { selectedBoard })
+    res.redirect(`/boards/${deletedTask.boardName._id}`);
 }))
 
 app.get('/boards/:boardID', catchAsync(async (req, res) => {
@@ -135,15 +135,18 @@ app.get('/boards/:boardID', catchAsync(async (req, res) => {
     res.render('boards/show', { selectedBoard })
 }))
 
+// Bad request route
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page not found!', 404))
 })
 
+// Error handling middleware
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = "Oh no, Something went wrong!"
     res.status(statusCode).render('error', { err });
 })
+
 
 app.listen(5000, () => {
     console.log("LISSENING ON PORT 5000");
