@@ -18,7 +18,11 @@ const boardSchema = new Schema({
 // DELETE ALL ASSOCIATED TASKS AFTER A BOARD IS DELETED
 boardSchema.post('findOneAndDelete', async function (board) {
     if (board.tasks.length) {
-        const res = await Task.deleteMany({ _id: { $in: board.tasks } })
+        await Task.deleteMany({
+            _id: {
+                $in: board.tasks
+            }
+        })
     }
 })
 

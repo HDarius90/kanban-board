@@ -10,7 +10,9 @@ const bodyParser = require('body-parser');
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
 const taskSchema = require('./schemas');
-const { convertISODateToYYYYMMDD } = require('./utils/utils'); // 
+const { convertISODateToYYYYMMDD } = require('./utils/utils');
+
+const boards = require('./routes/boards');
 
 app.engine('ejs', ejsMate);
 app.set('views', path.join(__dirname, 'views'));
@@ -64,7 +66,7 @@ db.once("open", () => {
     console.log("Database connected");
 });
 
-
+app.use('/boards', boards)
 
 // ROUTES
 app.get('/index', (req, res) => {
@@ -80,19 +82,6 @@ app.patch('/save-database/:boardID', catchAsync(async (req, res) => {
     res.render('boards/show', { selectedBoard })
 }));
 
-app.get('/boards/newboard', catchAsync(async (req, res) => {
-    res.render('boards/new');
-}))
-
-app.post('/boards/newboard', validateTask, catchAsync(async (req, res) => {
-    const newBoard = new Board({ name: req.body.board.name });
-    const newTask = new Task(req.body.task);
-    newTask.boardName = newBoard;
-    newBoard.tasks.push(newTask);
-    await newBoard.save();
-    await newTask.save();
-    res.redirect(`/boards/${newBoard._id}`)
-}))
 
 app.get('/boards/:boardID/newtask', catchAsync(async (req, res) => {
     const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
@@ -107,12 +96,6 @@ app.post('/boards/:boardID/newtask', validateTask, catchAsync(async (req, res) =
     await newTask.save();
     await selectedBoard.save();
     res.redirect(`/boards/${selectedBoard._id}`)
-}))
-
-app.get('/boards/:boardID/delete', catchAsync(async (req, res) => {
-    await Board.findByIdAndDelete(req.params.boardID);
-    res.locals.boards = await Board.find({});
-    res.render('boards/index')
 }))
 
 app.get('/boards/task/:taskID/edit', catchAsync(async (req, res) => {
@@ -130,10 +113,6 @@ app.delete('/boards/task/:taskID', catchAsync(async (req, res) => {
     res.redirect(`/boards/${deletedTask.boardName._id}`);
 }))
 
-app.get('/boards/:boardID', catchAsync(async (req, res) => {
-    const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
-    res.render('boards/show', { selectedBoard })
-}))
 
 // Bad request route
 app.all('*', (req, res, next) => {
