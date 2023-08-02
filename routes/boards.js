@@ -38,13 +38,18 @@ router.post('/newboard', validateTask, catchAsync(async (req, res) => {
 
 router.get('/:boardID', catchAsync(async (req, res) => {
     const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
+    if (!selectedBoard) {
+        req.flash('error', 'Cannot find board!');
+        return res.redirect('/');
+    }
     res.render('boards/show', { selectedBoard })
 }))
 
 router.get('/:boardID/delete', catchAsync(async (req, res) => {
     await Board.findByIdAndDelete(req.params.boardID);
     res.locals.boards = await Board.find({});
-    res.render('boards/index')
+    req.flash('success', 'Baord was successfully deleted');
+    res.redirect('/boards')
 }))
 
 router.patch('/:boardID/save-database', catchAsync(async (req, res) => {
