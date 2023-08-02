@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 const Task = require('../models/task');
 const Board = require('../models/board');
+const taskSchema = require('../schemas')
 
 // Common middleware to validate task schema and throw an error
 const validateTask = (req, res, next) => {
@@ -15,6 +16,10 @@ const validateTask = (req, res, next) => {
         next();
     }
 }
+
+router.get('/', (req, res) => {
+    res.render('boards/index')
+})
 
 router.get('/newboard', catchAsync(async (req, res) => {
     res.render('boards/new');
@@ -30,15 +35,40 @@ router.post('/newboard', validateTask, catchAsync(async (req, res) => {
     res.redirect(`/boards/${newBoard._id}`)
 }))
 
+router.get('/:boardID', catchAsync(async (req, res) => {
+    const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
+    res.render('boards/show', { selectedBoard })
+}))
+
 router.get('/:boardID/delete', catchAsync(async (req, res) => {
     await Board.findByIdAndDelete(req.params.boardID);
     res.locals.boards = await Board.find({});
     res.render('boards/index')
 }))
 
-router.get('/:boardID', catchAsync(async (req, res) => {
+router.patch('/:boardID/save-database', catchAsync(async (req, res) => {
+    const database = JSON.parse(req.body.database);
+    database.forEach(async element => {
+        await Task.findByIdAndUpdate(element._id, element)
+    });
     const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
     res.render('boards/show', { selectedBoard })
+}));
+
+
+router.get('/:boardID/newtask', catchAsync(async (req, res) => {
+    const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
+    res.render('tasks/new', { selectedBoard });
+}))
+
+router.post('/:boardID/newtask', validateTask, catchAsync(async (req, res) => {
+    const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
+    req.body.task.boardName = selectedBoard._id;
+    const newTask = new Task(req.body.task);
+    selectedBoard.tasks.push(newTask);
+    await newTask.save();
+    await selectedBoard.save();
+    res.redirect(`/boards/${selectedBoard._id}`)
 }))
 
 module.exports = router;

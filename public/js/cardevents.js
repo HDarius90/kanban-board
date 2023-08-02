@@ -22,6 +22,6 @@ export function addEventListeners(element, allTasks) {
         const taskId = element.id;
 
         // Navigate to the edit page by updating the URL
-        window.location.href = `/boards/task/${taskId}/edit`;
+        window.location.href = `/tasks/${taskId}/edit`;
     })
 }

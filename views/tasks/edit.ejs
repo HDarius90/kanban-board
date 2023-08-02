@@ -1,7 +1,7 @@
 <% layout('/layouts/boilerplate') %>
   <h1 class="text-center">Edit "<%= task.text %>" Task</h1>
   <div class="col-6 offset-3">
-    <form method="POST" action="/boards/task/<%= task._id %>?_method=PUT" novalidate class="needs-validation">
+    <form method="POST" action="/tasks/<%= task._id %>?_method=PUT" novalidate class="needs-validation">
 
       <div class="form-group row mb-1 p-3">
         <label for="task-text" class="col-sm-2 col-form-label"><b>Text:</b></label>
@@ -80,7 +80,7 @@
         <button type="submit" class="btn btn-success">Edit Task</button>
       </div>
     </form>
-    <form class="p-3" action="/boards/task/<%= task._id %>?boardName=<%= task.boardName %>&_method=DELETE"
+    <form class="p-3" action="/tasks/<%= task._id %>?boardName=<%= task.boardName %>&_method=DELETE"
       method="post">
       <button type="submit" class="btn btn-danger">Delete</button>
     </form>
