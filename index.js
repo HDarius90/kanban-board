@@ -3,6 +3,7 @@ const app = express();
 const path = require('path');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
+const flash  =  require('connect-flash');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -32,7 +33,13 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig))
 
-
+// Setting flash msg in local variable so it can be accessible on templates
+app.use(flash());
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+})
 
 
 // Common middleware to fetch boards

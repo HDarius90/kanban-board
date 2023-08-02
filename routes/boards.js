@@ -51,6 +51,7 @@ router.patch('/:boardID/save-database', catchAsync(async (req, res) => {
     database.forEach(async element => {
         await Task.findByIdAndUpdate(element._id, element)
     });
+    req.flash('success', "Successfully updated tasks state!");
     const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
     res.render('boards/show', { selectedBoard })
 }));
