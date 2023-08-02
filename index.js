@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const path = require('path');
 const ejsMate = require('ejs-mate');
+const session = require('express-session');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -17,6 +18,20 @@ const tasks = require('./routes/tasks');
 app.engine('ejs', ejsMate);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs')
+
+// Setup express-session
+const sessionConfig = {
+    secret: 'thisshouldbeabettersecret!',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+    }
+}
+app.use(session(sessionConfig))
+
 
 
 
