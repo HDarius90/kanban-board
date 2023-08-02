@@ -24,11 +24,13 @@ router.get('/edit', catchAsync(async (req, res) => {
 
 router.put('/', validateTask, catchAsync(async (req, res) => {
     const task = await Task.findByIdAndUpdate(req.params.taskID, req.body.task, { runValidators: true, new: true }).populate('boardName');
+    req.flash('success', 'Task successfully updated');
     res.redirect(`/boards/${task.boardName._id}`);
 }))
 
 router.delete('/', catchAsync(async (req, res) => {
     const deletedTask = await Task.findByIdAndDelete(req.params.taskID);
+    req.flash('success', 'Task successfully deleted');
     res.redirect(`/boards/${deletedTask.boardName._id}`);
 }))
 

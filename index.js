@@ -33,6 +33,7 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig))
 
+
 // Setting flash msg in local variable so it can be accessible on templates
 app.use(flash());
 app.use((req, res, next) => {
@@ -42,32 +43,19 @@ app.use((req, res, next) => {
 })
 
 
-// Common middleware to fetch boards
+// Middleware to fetch boards
 const fetchBoards = catchAsync(async (req, res, next) => {
     res.locals.boards = await Board.find({});
     next();
 });
 
-// Common middleware to turn ON the saveSuccess flag in the response locals
-function saveSuccessOn(req, res, next) {
-    res.locals.saveSuccess = true;
-    next();
-}
-function saveSuccessOff(req, res, next) {
-    // Common middleware to turn OFF the saveSuccess flag in the response locals
-    res.locals.saveSuccess = false;
-    next();
-}
 
 // These middlewares will be executed for every route
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 app.use(fetchBoards);
-app.use(saveSuccessOff);
 
-// This middleware only executed if you hit the save route
-app.use('/boards/:boardID/save-database', saveSuccessOn);
 
 // Setting up mongoDB connection with mongoose
 mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard');
@@ -87,6 +75,7 @@ app.use('/tasks/:taskID', tasks)
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page not found!', 404))
 })
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {

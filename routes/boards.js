@@ -32,6 +32,7 @@ router.post('/newboard', validateTask, catchAsync(async (req, res) => {
     newBoard.tasks.push(newTask);
     await newBoard.save();
     await newTask.save();
+    req.flash('success', 'New Board successfully created');
     res.redirect(`/boards/${newBoard._id}`)
 }))
 
@@ -51,9 +52,8 @@ router.patch('/:boardID/save-database', catchAsync(async (req, res) => {
     database.forEach(async element => {
         await Task.findByIdAndUpdate(element._id, element)
     });
-    req.flash('success', "Successfully updated tasks state!");
-    const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
-    res.render('boards/show', { selectedBoard })
+    req.flash('success', 'Successfully updated tasks state!');
+    res.redirect(`/boards/${req.params.boardID}`)
 }));
 
 
@@ -69,6 +69,7 @@ router.post('/:boardID/newtask', validateTask, catchAsync(async (req, res) => {
     selectedBoard.tasks.push(newTask);
     await newTask.save();
     await selectedBoard.save();
+    req.flash('success', 'Task successfully created');
     res.redirect(`/boards/${selectedBoard._id}`)
 }))
 
