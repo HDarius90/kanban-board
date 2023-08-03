@@ -3,12 +3,14 @@ const app = express();
 const path = require('path');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
-const flash  =  require('connect-flash');
+const flash = require('connect-flash');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const User = require('./models/user')
+
 
 
 const Board = require('./models/board');
@@ -16,8 +18,9 @@ const Board = require('./models/board');
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
 
-const boards = require('./routes/boards'); 
-const tasks = require('./routes/tasks'); 
+const userRoutes = require('./routes/users')
+const boardRoutes = require('./routes/boards');
+const taskRoutes = require('./routes/tasks');
 
 app.engine('ejs', ejsMate);
 app.set('views', path.join(__dirname, 'views'));
@@ -76,9 +79,10 @@ db.once("open", () => {
     console.log("Database connected");
 });
 
-
-app.use('/boards', boards)
-app.use('/tasks/:taskID', tasks)
+// Routers
+app.use('/', userRoutes);
+app.use('/boards', boardRoutes)
+app.use('/tasks/:taskID', taskRoutes)
 
 
 // Bad request route
