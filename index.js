@@ -7,6 +7,9 @@ const flash  =  require('connect-flash');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+
 
 const Board = require('./models/board');
 
@@ -33,6 +36,13 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig))
 
+
+//Setting up passport
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // Setting flash msg in local variable so it can be accessible on templates
 app.use(flash());
