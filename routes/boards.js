@@ -40,7 +40,7 @@ router.get('/:boardID', catchAsync(async (req, res) => {
     const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
     if (!selectedBoard) {
         req.flash('error', 'Cannot find board!');
-        return res.redirect('/');
+        return res.redirect('/boards');
     }
     res.render('boards/show', { selectedBoard })
 }))
