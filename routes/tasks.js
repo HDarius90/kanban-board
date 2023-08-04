@@ -5,6 +5,8 @@ const ExpressError = require('../utils/ExpressError');
 const Task = require('../models/task');
 const { convertISODateToYYYYMMDD } = require('../utils/utils')
 const taskSchema = require('../schemas')
+const { isLoggedIn } = require('../middleware')
+
 
 // Common middleware to validate task schema and throw an error
 const validateTask = (req, res, next) => {
@@ -17,18 +19,18 @@ const validateTask = (req, res, next) => {
     }
 }
 
-router.get('/edit', catchAsync(async (req, res) => {
+router.get('/edit', isLoggedIn, catchAsync(async (req, res) => {
     const task = await Task.findById(req.params.taskID);
     res.render('tasks/edit', { task, convertISODateToYYYYMMDD })
 }))
 
-router.put('/', validateTask, catchAsync(async (req, res) => {
+router.put('/', isLoggedIn, validateTask, catchAsync(async (req, res) => {
     const task = await Task.findByIdAndUpdate(req.params.taskID, req.body.task, { runValidators: true, new: true }).populate('boardName');
     req.flash('success', 'Task successfully updated');
     res.redirect(`/boards/${task.boardName._id}`);
 }))
 
-router.delete('/', catchAsync(async (req, res) => {
+router.delete('/', isLoggedIn, catchAsync(async (req, res) => {
     const deletedTask = await Task.findByIdAndDelete(req.params.taskID);
     req.flash('success', 'Task successfully deleted');
     res.redirect(`/boards/${deletedTask.boardName._id}`);
