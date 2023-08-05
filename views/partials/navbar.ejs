@@ -1,36 +1,29 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary stickey-top" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary" data-bs-theme="dark">
     <div class="container-fluid">
-
-        <a class="navbar-brand" href="/boards">Kanban Board</a>
+        <a class="navbar-brand" href="#">Kanban Board</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <div class="navbar-nav">
+                <a class="nav-link" href="/boards/newboard">New Board</a>
 
                 <% for (let key in boards) { %>
-                    <% const board = boards[key]; %>
-                    <li class="nav-item">
+                    <% const board=boards[key]; %>
                         <a class="nav-link" href="/boards/<%= board._id %>">
                             <%= board.name %>
                         </a>
-                    </li>
-                <% } %>
+                        <% } %>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="/boards/newboard">New Board</a>
-                        </li>
+            </div>
+            
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/login">Login</a>
+                <a class="nav-link" href="/register">Sign Up</a>
+                <a class="nav-link" href="/logout">Logout</a>
+            </div>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="/register">Sign Up</a>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a class="nav-link" href="/login">Log In</a>
-                        </li>
-
-            </ul>
         </div>
     </div>
 </nav>
