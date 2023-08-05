@@ -47,9 +47,10 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Setting flash msg in local variable so it can be accessible on templates
+// Setting up local variables 
 app.use(flash());
 app.use((req, res, next) => {
+    res.locals.currentUser = req.user
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
