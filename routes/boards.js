@@ -9,18 +9,31 @@ const boards = require('../controllers/boards')
 
 router.get('/', boards.index);
 
-router.get('/newboard', isLoggedIn, catchAsync(boards.renderNewBoardForm));
+router.route('/newboard')
+    .get(isLoggedIn,
+        catchAsync(boards.renderNewBoardForm))
+    .post(isLoggedIn,
+        validateTask,
+        catchAsync(boards.createBoard));
 
-router.post('/newboard', isLoggedIn, validateTask, catchAsync(boards.createBoard));
+router.get('/:boardID',
+    catchAsync(boards.showBoard));
 
-router.get('/:boardID', catchAsync(boards.showBoard));
+router.get('/:boardID/delete',
+    isLoggedIn,
+    isAuthor,
+    catchAsync(boards.deleteBoard));
 
-router.get('/:boardID/delete', isLoggedIn, isAuthor, catchAsync(boards.deleteBoard));
+router.patch('/:boardID/save-database',
+    isLoggedIn,
+    catchAsync(boards.saveBoard));
 
-router.patch('/:boardID/save-database', isLoggedIn, catchAsync(boards.saveBoard));
 
-router.get('/:boardID/newtask', isLoggedIn, catchAsync(boards.renderNewTaskForm));
-
-router.post('/:boardID/newtask', isLoggedIn, validateTask, catchAsync(boards.createTask));
+router.route('/:boardID/newtask')
+    .get(isLoggedIn,
+        catchAsync(boards.renderNewTaskForm))
+    .post(isLoggedIn,
+        validateTask,
+        catchAsync(boards.createTask));
 
 module.exports = router;

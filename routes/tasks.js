@@ -6,8 +6,12 @@ const tasks = require('../controllers/tasks');
 
 router.get('/edit', isLoggedIn, catchAsync(tasks.renderEditTaskForm));
 
-router.put('/', isLoggedIn, validateTask, catchAsync(tasks.editTask))
+router.route('/')
+    .put(isLoggedIn,
+        validateTask,
+        catchAsync(tasks.editTask))
+    .delete(isLoggedIn,
+        catchAsync(tasks.deleteTask))
 
-router.delete('/', isLoggedIn, catchAsync(tasks.deleteTask))
 
 module.exports = router;
