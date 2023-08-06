@@ -22,7 +22,7 @@ body {
 .col {
     border: 3px black solid;
     padding: 0%;
-    height: 40rem;
+    min-height: 40rem;
     margin: 1rem;
 }
 

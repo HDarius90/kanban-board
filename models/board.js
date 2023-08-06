@@ -12,7 +12,11 @@ const boardSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Task'
         }
-    ]
+    ],
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
 
 // DELETE ALL ASSOCIATED TASKS AFTER A BOARD IS DELETED

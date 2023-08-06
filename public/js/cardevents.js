@@ -1,5 +1,5 @@
 //Add all the event listeners to the card element
-export function addEventListeners(element, allTasks) {
+export function addEventListeners(element) {
     element.addEventListener('dragstart', () => {
         element.classList.add('dragging');  //Add dragging class when dragstart
     })
@@ -16,11 +16,9 @@ export function addEventListeners(element, allTasks) {
         //it, and if it is the same then remove the focus class instead of toggle
     })
 
-    //rename tasks on dbclick event and update text on allTasks variable
     element.addEventListener('dblclick', () => {
-        // Get the task ID from the element's data attribute
+        // Get the task ID from the element's id
         const taskId = element.id;
-
         // Navigate to the edit page by updating the URL
         window.location.href = `/tasks/${taskId}/edit`;
     })

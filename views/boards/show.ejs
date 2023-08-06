@@ -1,64 +1,69 @@
 <% layout('/layouts/boilerplate') %>
 
-            <h1 class="text-center">
-                <%= selectedBoard.name %>
-            </h1>
+    <h1 class="text-center">
+        <%= selectedBoard.name %>
+    </h1>
 
 
-            <div class="board row text-center">
-                <div class="col container" id="todo-col">
-                    <div class="col-title-red">
-                        <h4>To Do</h4>
-                    </div>
-                </div>
-                <div class="col container" id="inprogress-col">
-                    <div class="col-title-yellow">
-                        <h4>In Progress</h4>
-                    </div>
-                </div>
-                <div class="col container" id="done-col">
-                    <div class="col-title-green">
-                        <h4>Done</h4>
-                    </div>
-                </div>
+    <div class="board row text-center">
+        <div class="col container" id="todo-col">
+            <div class="col-title-red">
+                <h4>To Do</h4>
             </div>
-
-
-
-
-            <button type="submit" id="saveButton" class="btn btn-success m-3">Save</button>
-
-
-            <a class="btn btn-primary m-3" role="button" aria-disabled="true"
-                href="/boards/<%= selectedBoard._id %>/newtask %>">New
-                Task</a>
-
-            <a class="btn btn-danger m-3" role="button" aria-disabled="true"
-                href="/boards/<%= selectedBoard._id %>/delete%>">Delete Board</a>
-
-            <div class="btn-group btn-group-toggle p-3" data-toggle="buttons">
-
-                <label class="btn btn-secondary btn-left">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-arrow-left" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
-                    </svg>
-                </label>
-                <label class="btn btn-secondary btn-right">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-arrow-right" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                            d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
-                    </svg> </label>
-
+        </div>
+        <div class="col container" id="inprogress-col">
+            <div class="col-title-yellow">
+                <h4>In Progress</h4>
             </div>
+        </div>
+        <div class="col container" id="done-col">
+            <div class="col-title-green">
+                <h4>Done</h4>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="d-flex justify-content-between">
+
+        <button type="submit" id="saveButton" class="btn btn-success m-3">Save</button>
+
+
+        <a class="btn btn-primary m-3" role="button" aria-disabled="true"
+            href="/boards/<%= selectedBoard._id %>/newtask %>">New
+            Task</a>
+
+        <a class="btn btn-danger m-3" role="button" aria-disabled="true"
+            href="/boards/<%= selectedBoard._id %>/delete%>">Delete Board</a>
+
+        <div class="btn-group btn-group-toggle p-3" data-toggle="buttons">
+
+            <label class="btn btn-secondary btn-left">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-arrow-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                </svg>
+            </label>
+            <label class="btn btn-secondary btn-right">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-arrow-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                </svg> </label>
+
+        </div>
+
+        <span>created by: <%= selectedBoard.author.username %></span>
+
+    </div>
 
 
 
-            <script>
-                // Define the filteredTasks variable in the global scope
-                const tasks = '<%- JSON.stringify(selectedBoard.tasks) %>';
-            </script>
 
-            <script type="module" src="/js/render.js"></script>
+    <script>
+        // Define the filteredTasks variable in the global scope
+        const tasks = '<%- JSON.stringify(selectedBoard.tasks) %>';
+    </script>
+
+    <script type="module" src="/js/render.js"></script>

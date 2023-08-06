@@ -29,6 +29,7 @@ router.get('/newboard', isLoggedIn, catchAsync(async (req, res) => {
 
 router.post('/newboard', isLoggedIn, validateTask, catchAsync(async (req, res) => {
     const newBoard = new Board({ name: req.body.board.name });
+    newBoard.author = req.user._id;
     const newTask = new Task(req.body.task);
     newTask.boardName = newBoard;
     newBoard.tasks.push(newTask);
@@ -39,7 +40,7 @@ router.post('/newboard', isLoggedIn, validateTask, catchAsync(async (req, res) =
 }))
 
 router.get('/:boardID', catchAsync(async (req, res) => {
-    const selectedBoard = await Board.findById(req.params.boardID).populate('tasks');
+    const selectedBoard = await Board.findById(req.params.boardID).populate('tasks').populate('author');
     if (!selectedBoard) {
         req.flash('error', 'Cannot find board!');
         return res.redirect('/boards');
