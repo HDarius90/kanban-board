@@ -1,39 +1,13 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 const catchAsync = require('../utils/catchAsync');
-const ExpressError = require('../utils/ExpressError');
-const Task = require('../models/task');
-const { convertISODateToYYYYMMDD } = require('../utils/utils')
-const taskSchema = require('../schemas')
-const { isLoggedIn } = require('../middleware')
+const { isLoggedIn, validateTask } = require('../middleware');
+const tasks = require('../controllers/tasks');
 
+router.get('/edit', isLoggedIn, catchAsync(tasks.renderEditTaskForm));
 
-// Common middleware to validate task schema and throw an error
-const validateTask = (req, res, next) => {
-    const { error } = taskSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',');
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
-    }
-}
+router.put('/', isLoggedIn, validateTask, catchAsync(tasks.editTask))
 
-router.get('/edit', isLoggedIn, catchAsync(async (req, res) => {
-    const task = await Task.findById(req.params.taskID);
-    res.render('tasks/edit', { task, convertISODateToYYYYMMDD })
-}))
-
-router.put('/', isLoggedIn, validateTask, catchAsync(async (req, res) => {
-    const task = await Task.findByIdAndUpdate(req.params.taskID, req.body.task, { runValidators: true, new: true }).populate('boardName');
-    req.flash('success', 'Task successfully updated');
-    res.redirect(`/boards/${task.boardName._id}`);
-}))
-
-router.delete('/', isLoggedIn, catchAsync(async (req, res) => {
-    const deletedTask = await Task.findByIdAndDelete(req.params.taskID);
-    req.flash('success', 'Task successfully deleted');
-    res.redirect(`/boards/${deletedTask.boardName._id}`);
-}))
+router.delete('/', isLoggedIn, catchAsync(tasks.deleteTask))
 
 module.exports = router;
