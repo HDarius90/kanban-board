@@ -9,7 +9,9 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-const User = require('./models/user')
+const User = require('./models/user');
+const mongoSanitize = require('express-mongo-sanitize');
+
 
 
 
@@ -65,9 +67,10 @@ const fetchBoards = catchAsync(async (req, res, next) => {
 
 
 // These middlewares will be executed for every route
-app.use(express.static(path.join(__dirname, 'public')))
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(methodOverride('_method'))
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
+app.use(mongoSanitize());
 app.use(fetchBoards);
 
 

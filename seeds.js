@@ -54,12 +54,12 @@ const seedDB = async () => {
       {
         name: 'Board 1',
         tasks: [],
-        author: '64ce26d044af472fc9459c41',
+        author: '64cce5b68e845d3ec9198f44',
       },
       {
         name: 'Board 2',
         tasks: [],
-        author: '64ce26d044af472fc9459c41',
+        author: '64cce5b68e845d3ec9198f44',
       },
     ];
 
