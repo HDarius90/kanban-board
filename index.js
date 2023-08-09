@@ -30,8 +30,10 @@ app.set('view engine', 'ejs')
 
 // Setup express-session
 const sessionConfig = {
+    name: 'sutemeny',
     secret: 'thisshouldbeabettersecret!',
     resave: false,
+   // secure: true,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
