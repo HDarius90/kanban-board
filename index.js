@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
 const express = require("express");
 const app = express();
 const path = require('path');
@@ -77,7 +81,10 @@ app.use(fetchBoards);
 
 
 // Setting up mongoDB connection with mongoose
-mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard');
+const dbUrl = process.env.DB_URL;
+
+mongoose.connect(dbUrl);
+//mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard');
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
