@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
-const Task = require('../models/task');
-const Board = require('../models/board');
-const { isLoggedIn, isAuthor, validateTask } = require('../middleware')
-const boards = require('../controllers/boards')
+const { isLoggedIn, isAuthor, validateTask } = require('../middleware');
+const boards = require('../controllers/boards');
 
 
 router.get('/', boards.index);

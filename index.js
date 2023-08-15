@@ -1,7 +1,4 @@
-if (process.env.NODE_ENV !== "production") {
-    require('dotenv').config();
-}
-
+// Import required modules
 const express = require("express");
 const app = express();
 const path = require('path');
@@ -15,24 +12,20 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const mongoSanitize = require('express-mongo-sanitize');
-
-
-
-
 const Board = require('./models/board');
-
-const catchAsync = require('./utils/catchAsync')
-const ExpressError = require('./utils/ExpressError')
-
-const userRoutes = require('./routes/users')
+const catchAsync = require('./utils/catchAsync');
+const ExpressError = require('./utils/ExpressError');
+const userRoutes = require('./routes/users');
 const boardRoutes = require('./routes/boards');
 const taskRoutes = require('./routes/tasks');
 
+
+// Configure EJS as the template engine
 app.engine('ejs', ejsMate);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs')
 
-// Setup express-session
+// Setup session configuration
 const sessionConfig = {
     name: 'sutemeny',
     secret: 'thisshouldbeabettersecret!',
@@ -48,14 +41,14 @@ const sessionConfig = {
 app.use(session(sessionConfig))
 
 
-//Setting up passport
+// Configure Passport for authentication
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Setting up local variables 
+// Set up local variables for flash messages
 app.use(flash());
 app.use((req, res, next) => {
     res.locals.currentUser = req.user
@@ -65,14 +58,14 @@ app.use((req, res, next) => {
 })
 
 
-// Middleware to fetch boards
+// Middleware to fetch boards and make them available to views
 const fetchBoards = catchAsync(async (req, res, next) => {
     res.locals.boards = await Board.find({});
     next();
 });
 
 
-// These middlewares will be executed for every route
+// Middleware for serving static files, parsing request bodies, method override, sanitizing MongoDB queries, and fetching boards
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
@@ -80,25 +73,21 @@ app.use(mongoSanitize());
 app.use(fetchBoards);
 
 
-// Setting up mongoDB connection with mongoose
-const dbUrl = process.env.DB_URL;
-
-mongoose.connect(dbUrl);
-//mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard');
-
+// Connect to the MongoDB database
+mongoose.connect('mongodb://127.0.0.1:27017/kanbanboard');
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
     console.log("Database connected");
 });
 
-// Routers
+// Set up routes
 app.use('/', userRoutes);
 app.use('/boards', boardRoutes)
 app.use('/tasks/:taskID', taskRoutes)
 
 
-// Bad request route
+// Handle bad requests with a 404 error
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page not found!', 404))
 })
@@ -111,7 +100,7 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', { err });
 })
 
-
+// Start the server and listen on port 5000
 app.listen(5000, () => {
     console.log("LISSENING ON PORT 5000");
 })
