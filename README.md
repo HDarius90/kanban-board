@@ -1,6 +1,6 @@
 # kanban-board
 kanban board application
-Hozz létre egy kanban board alkalmazást TypeScript használatával. Az alkalmazásnak lehetővé kell tennie a felhasználók számára, hogy a feladatokat különböző oszlopokba rendezzék, amelyek különböző taszk életciklus szakaszokat képviselnek, például "To Do", "In Progress" és "Done".
+Hozz létre egy kanban board alkalmazást JS használatával. Az alkalmazásnak lehetővé kell tennie a felhasználók számára, hogy a feladatokat különböző oszlopokba rendezzék, amelyek különböző taszk életciklus szakaszokat képviselnek, például "To Do", "In Progress" és "Done".
 
  
 
